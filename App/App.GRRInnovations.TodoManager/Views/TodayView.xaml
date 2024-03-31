@@ -2,12 +2,25 @@
 <ContentPage x:Class="App.GRRInnovations.TodoManager.Views.TodayView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="TodayView"
              x:DataType="vm:TodayViewModel">
-    <VerticalStackLayout>
-        <Label HorizontalOptions="Center"
-               Text="teste"
-               VerticalOptions="Center" />
-    </VerticalStackLayout>
+    <AbsoluteLayout BackgroundColor="LightPink"
+                    HorizontalOptions="FillAndExpand"
+                    VerticalOptions="FillAndExpand">
+        <VerticalStackLayout Margin="10,30" Spacing="10">
+            <Label FontAttributes="Bold"
+                   FontSize="Large"
+                   Text="Today" />
+            <Label BindingContext="{x:Static sys:DateTime.Now}" Text="{Binding StringFormat='{0:D}'}" />
+        </VerticalStackLayout>
+
+
+
+        <ImageButton AbsoluteLayout.LayoutBounds="1, 1, 60, 60"
+                     AbsoluteLayout.LayoutFlags="PositionProportional"
+                     CornerRadius="30"
+                     Source="button_add.png" />
+    </AbsoluteLayout>
 </ContentPage>

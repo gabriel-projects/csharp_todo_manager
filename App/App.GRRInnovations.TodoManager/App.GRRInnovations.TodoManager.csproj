@@ -50,6 +50,7 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Resources\Images\button_add.png" />
 	</ItemGroup>
 
 	<ItemGroup>

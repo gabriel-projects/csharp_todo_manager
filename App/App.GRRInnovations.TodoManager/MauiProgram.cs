@@ -36,6 +36,15 @@ namespace App.GRRInnovations.TodoManager
             builder.Services.AddSingleton<TabbedPageHomeViewModel>();
             builder.Services.AddSingleton<TabbedPageHomeView>();
 
+            builder.Services.AddSingleton<SearchView>();
+            builder.Services.AddSingleton<SearchViewModel>();
+
+            builder.Services.AddSingleton<FutureView>();
+            builder.Services.AddSingleton<FutureViewModel>();
+
+            builder.Services.AddSingleton<BundleView>();
+            builder.Services.AddSingleton<BundleViewModel>();
+
             return builder.Build();
         }
 

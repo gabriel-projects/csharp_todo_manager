@@ -7,7 +7,7 @@
              x:DataType="vm:TodayViewModel">
     <VerticalStackLayout>
         <Label HorizontalOptions="Center"
-               Text="Welcome to .NET MAUI!"
+               Text="teste"
                VerticalOptions="Center" />
     </VerticalStackLayout>
 </ContentPage>

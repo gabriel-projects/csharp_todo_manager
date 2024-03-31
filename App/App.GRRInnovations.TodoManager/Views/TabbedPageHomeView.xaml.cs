@@ -13,12 +13,14 @@ public partial class TabbedPageHomeView
         BindingContext = viewModel;
 
         AddTab<TodayView>();
+        AddTab<SearchView>();
+        AddTab<FutureView>();
+        AddTab<BundleView>();
     }
 
     private void AddTab<T>() where T : Page
     {
         var page = DepencyInjectionServiceProvider.GetService<T>();
-
         Children.Add(page);
     }
 }

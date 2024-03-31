@@ -5,16 +5,14 @@
             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
             xmlns:views="clr-namespace:App.GRRInnovations.TodoManager.Views"
             Title="TabbedPageHomeView"
-            android:TabbedPage.ToolbarPlacement="Bottom"
             android:TabbedPage.IsSmoothScrollEnabled="False"
-            
+            android:TabbedPage.ToolbarPlacement="Bottom"
             BarBackgroundColor="AliceBlue"
             SelectedTabColor="#512BD4"
             UnselectedTabColor="Gray">
 
-    <views:TodayView />
-    <views:FutureView />
+    <!--<views:FutureView />
     <views:SearchView />
-    <views:BundleView />
+    <views:BundleView />-->
 
 </TabbedPage>

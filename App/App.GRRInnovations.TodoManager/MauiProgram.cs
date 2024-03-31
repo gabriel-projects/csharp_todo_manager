@@ -1,4 +1,7 @@
 ﻿using App.GRRInnovations.TodoManager.Models;
+using App.GRRInnovations.TodoManager.ViewModels;
+using App.GRRInnovations.TodoManager.Views;
+using CommunityToolkit.Maui;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Syncfusion.Maui.Core.Hosting;
@@ -17,6 +20,7 @@ namespace App.GRRInnovations.TodoManager
 
             builder
                 .UseMauiApp<App>()
+                .UseMauiCommunityToolkit()
                 .ConfigureFonts(fonts =>
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -25,6 +29,12 @@ namespace App.GRRInnovations.TodoManager
 #if DEBUG
     		builder.Logging.AddDebug();
 #endif
+
+            builder.Services.AddSingleton<TodayViewModel>();
+            builder.Services.AddSingleton<TodayView>();
+
+            builder.Services.AddSingleton<TabbedPageHomeViewModel>();
+            builder.Services.AddSingleton<TabbedPageHomeView>();
 
             return builder.Build();
         }

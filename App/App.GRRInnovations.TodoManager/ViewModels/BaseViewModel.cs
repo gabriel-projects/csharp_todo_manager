@@ -2,7 +2,12 @@
 
 namespace App.GRRInnovations.TodoManager.ViewModels
 {
-    public partial class BaseViewModel : ObservableObject
+    public abstract partial class BaseViewModel : ObservableObject
     {
+        public BaseViewModel()
+        {
+        }
+
+        //public abstract Task Appearing();
     }
 }

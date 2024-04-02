@@ -69,6 +69,11 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <ProjectReference Include="..\App.GRRInnovations.TodoManager.Domain\App.GRRInnovations.TodoManager.Domain.csproj" />
+	  <ProjectReference Include="..\App.GRRInnovations.TodoManager.Infrastructure\App.GRRInnovations.TodoManager.Infrastructure.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
 	  <MauiXaml Update="Views\BundleView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

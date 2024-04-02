@@ -1,4 +1,6 @@
-﻿using App.GRRInnovations.TodoManager.Models;
+﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
+using App.GRRInnovations.TodoManager.Infrastructure.Repositories;
+using App.GRRInnovations.TodoManager.Models;
 using App.GRRInnovations.TodoManager.ViewModels;
 using App.GRRInnovations.TodoManager.Views;
 using CommunityToolkit.Maui;
@@ -44,6 +46,8 @@ namespace App.GRRInnovations.TodoManager
 
             builder.Services.AddSingleton<BundleView>();
             builder.Services.AddSingleton<BundleViewModel>();
+
+            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
 
             return builder.Build();
         }

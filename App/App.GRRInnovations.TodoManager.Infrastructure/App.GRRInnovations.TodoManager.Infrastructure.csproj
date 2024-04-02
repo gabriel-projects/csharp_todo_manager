@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Repositories\" />
+    <ProjectReference Include="..\App.GRRInnovations.TodoManager.Domain\App.GRRInnovations.TodoManager.Domain.csproj" />
   </ItemGroup>
 
 </Project>

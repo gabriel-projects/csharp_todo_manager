@@ -2,10 +2,17 @@
 <ContentPage x:Class="App.GRRInnovations.TodoManager.Views.TodayView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="TodayView"
              x:DataType="vm:TodayViewModel">
+
+    <ContentPage.Behaviors>
+        <mct:EventToCommandBehavior Command="{Binding AppearingCommand}" EventName="Appearing" />
+        <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
+    </ContentPage.Behaviors>
+
     <AbsoluteLayout BackgroundColor="LightPink"
                     HorizontalOptions="FillAndExpand"
                     VerticalOptions="FillAndExpand">
@@ -15,8 +22,6 @@
                    Text="Today" />
             <Label BindingContext="{x:Static sys:DateTime.Now}" Text="{Binding StringFormat='{0:D}'}" />
         </VerticalStackLayout>
-
-
 
         <ImageButton AbsoluteLayout.LayoutBounds="1, 1, 60, 60"
                      AbsoluteLayout.LayoutFlags="PositionProportional"

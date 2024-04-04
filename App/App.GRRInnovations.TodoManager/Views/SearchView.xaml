@@ -2,12 +2,27 @@
 <ContentPage x:Class="App.GRRInnovations.TodoManager.Views.SearchView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:behaviors="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:inputLayout="clr-namespace:Syncfusion.Maui.Core;assembly=Syncfusion.Maui.Core"
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="SearchView"
              x:DataType="vm:SearchViewModel">
-    <VerticalStackLayout BackgroundColor="LightYellow">
-        <Label HorizontalOptions="Center"
-               Text="Batata"
-               VerticalOptions="Center" />
+    <VerticalStackLayout Margin="10,20,0,0" BackgroundColor="LightYellow">
+
+        <Label FontSize="20" Text="Search" />
+
+        <Border HorizontalOptions="Start"
+                StrokeShape="RoundRectangle 10,10,10,10"
+                StrokeThickness="1">
+            <SearchBar BackgroundColor="LightBlue"
+                       CancelButtonColor="Black"
+                       Placeholder="Tasks and more"
+                       Text="{Binding TextSearch}">
+                <SearchBar.Behaviors>
+                    <behaviors:EventToCommandBehavior Command="{Binding TextSearchChangedFilterListCommand}" EventName="TextChanged" />
+                </SearchBar.Behaviors>
+            </SearchBar>
+        </Border>
+
     </VerticalStackLayout>
 </ContentPage>

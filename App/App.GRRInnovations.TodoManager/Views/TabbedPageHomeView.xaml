@@ -6,6 +6,7 @@
             xmlns:views="clr-namespace:App.GRRInnovations.TodoManager.Views"
             Title="TabbedPageHomeView"
             android:TabbedPage.IsSmoothScrollEnabled="False"
+            android:TabbedPage.IsSwipePagingEnabled="False"
             android:TabbedPage.ToolbarPlacement="Bottom"
             BarBackgroundColor="AliceBlue"
             SelectedTabColor="#512BD4"

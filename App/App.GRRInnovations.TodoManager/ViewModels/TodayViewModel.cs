@@ -1,7 +1,7 @@
-﻿using App.GRRInnovations.TodoManager.Domain.Entities;
-using App.GRRInnovations.TodoManager.Domain.Repositories;
+﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
+using App.GRRInnovations.TodoManager.Models;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System.Collections.ObjectModel;
 
 namespace App.GRRInnovations.TodoManager.ViewModels
 {
@@ -14,18 +14,42 @@ namespace App.GRRInnovations.TodoManager.ViewModels
             AppointmentRepository = appointmentRepository;
         }
 
+        [ObservableProperty]
+        private List<AppointmentModel> appointments = new List<AppointmentModel>();
 
-        ObservableCollection<IAppointment> Appointments { get; set; }
+        [ObservableProperty]
+        private bool isRefreshing;
+
+        [RelayCommand]
+        public async Task Refresh()
+        {
+            await Task.Delay(5000);
+
+            IsRefreshing = false;
+        }
 
         [RelayCommand]
         public async Task Appearing()
         {
             try
             {
-                var appointments = await AppointmentRepository.Appointments();
+                var appointmentsRepo = await AppointmentRepository.Appointments();
 
-                Appointments = new ObservableCollection<IAppointment>(appointments);
-
+                foreach (var app in appointmentsRepo)
+                {
+                    Appointments.Add(new AppointmentModel
+                    {
+                        Completed = app.Completed,
+                        CreatedAt = app.CreatedAt,
+                        Description = app.Description,
+                        DueDate = app.DueDate,
+                        EndDate = app.EndDate,
+                        Id = app.Id,
+                        Recurrent = app.Recurrent,
+                        StartDate = app.StartDate,
+                        Title = app.Title
+                    });
+                }
             }
             catch (Exception ex)
             {

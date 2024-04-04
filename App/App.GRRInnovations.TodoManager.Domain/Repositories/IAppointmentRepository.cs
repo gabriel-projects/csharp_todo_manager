@@ -9,6 +9,6 @@ namespace App.GRRInnovations.TodoManager.Domain.Repositories
 {
     public interface IAppointmentRepository
     {
-        Task<List<IAppointment>> Appointments();
+        Task<List<AppointmentData>> Appointments();
     }
 }

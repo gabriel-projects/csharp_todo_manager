@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GRRInnovations.TodoManager.Domain.Entities.Models
+namespace App.GRRInnovations.TodoManager.Domain.Entities
 {
-    public class AppointmentModel : IAppointment
+    public class AppointmentData : IAppointment
     {
         public Guid Id { get; set; }
         public string Description { get; set; }

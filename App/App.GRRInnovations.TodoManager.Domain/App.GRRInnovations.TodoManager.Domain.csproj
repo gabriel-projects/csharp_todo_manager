@@ -7,6 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Folder Include="Entities\Models\" />
     <Folder Include="Exceptions\" />
   </ItemGroup>
 

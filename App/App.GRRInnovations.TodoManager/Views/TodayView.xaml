@@ -3,6 +3,7 @@
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:models="clr-namespace:App.GRRInnovations.TodoManager.Models"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="TodayView"
@@ -13,19 +14,47 @@
         <mct:EventToCommandBehavior Command="{Binding DisappearingCommand}" EventName="Disappearing" />
     </ContentPage.Behaviors>
 
-    <AbsoluteLayout BackgroundColor="LightPink"
-                    HorizontalOptions="FillAndExpand"
-                    VerticalOptions="FillAndExpand">
-        <VerticalStackLayout Margin="10,30" Spacing="10">
-            <Label FontAttributes="Bold"
-                   FontSize="Large"
-                   Text="Today" />
-            <Label BindingContext="{x:Static sys:DateTime.Now}" Text="{Binding StringFormat='{0:D}'}" />
-        </VerticalStackLayout>
+    <RefreshView Command="{Binding RefreshCommand}" IsRefreshing="{Binding IsRefreshing}">
+        <Grid RowDefinitions="auto, *">
+            <VerticalStackLayout Grid.Row="0" Margin="5,30,0,0">
+                <Label FontAttributes="Bold"
+                       FontSize="Large"
+                       Text="Today" />
+                <Label BindingContext="{x:Static sys:DateTime.Now}" Text="{Binding StringFormat='{0:D}'}" />
+            </VerticalStackLayout>
 
-        <ImageButton AbsoluteLayout.LayoutBounds="1, 1, 60, 60"
-                     AbsoluteLayout.LayoutFlags="PositionProportional"
-                     CornerRadius="30"
-                     Source="button_add.png" />
-    </AbsoluteLayout>
+            <CollectionView Grid.Row="1"
+                            Margin="0,20,0,0"
+                            BackgroundColor="LightBlue"
+                            ItemsSource="{Binding Appointments}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate x:DataType="models:AppointmentModel">
+                        <HorizontalStackLayout Margin="5,0,0,0">
+                            <Label FontAttributes="Bold" Text="{Binding Title}" />
+                            <Label Text=" - " />
+                            <Label Text="{Binding Description}" />
+                        </HorizontalStackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <AbsoluteLayout Grid.RowSpan="2">
+                <ImageButton AbsoluteLayout.LayoutBounds="1, 1, 60, 60"
+                             AbsoluteLayout.LayoutFlags="PositionProportional"
+                             CornerRadius="30"
+                             Source="button_add.png">
+                    <ImageButton.Triggers>
+                        <Trigger TargetType="ImageButton" Property="IsPressed" Value="True">
+                            <Setter Property="Scale" Value=".9" />
+                        </Trigger>
+                        <Trigger TargetType="ImageButton" Property="IsPressed" Value="False">
+                            <Setter Property="Scale" Value="1" />
+                        </Trigger>
+                    </ImageButton.Triggers>
+                </ImageButton>
+
+            </AbsoluteLayout>
+        </Grid>
+    </RefreshView>
+
 </ContentPage>

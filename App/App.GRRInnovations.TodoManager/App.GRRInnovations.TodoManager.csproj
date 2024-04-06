@@ -50,8 +50,17 @@
 
 	<ItemGroup>
 	  <None Remove="appsettings.json" />
+	  <None Remove="Resources\Images\bate_papo_online.png" />
 	  <None Remove="Resources\Images\button_add.png" />
+	  <None Remove="Resources\Images\engrenagem.png" />
+	  <None Remove="Resources\Images\foto_app.jpg" />
+	  <None Remove="Resources\Images\informacoes.png" />
+	  <None Remove="Resources\Images\perfil_usuario.png" />
+	  <None Remove="Resources\Images\produtividade.png" />
+	  <None Remove="Resources\Images\sair.png" />
 	  <None Remove="Resources\Images\search.png" />
+	  <None Remove="Resources\Images\sincronizar.png" />
+	  <None Remove="Resources\Images\temas.png" />
 	</ItemGroup>
 
 	<ItemGroup>

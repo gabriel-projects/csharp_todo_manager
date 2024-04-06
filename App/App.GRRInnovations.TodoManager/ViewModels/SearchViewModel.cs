@@ -11,7 +11,7 @@ namespace App.GRRInnovations.TodoManager.ViewModels
         [RelayCommand]
         private void OnTextSearchChangedFilterList()
         {
-            
+            Console.WriteLine(TextSearch);
         }
     }
 }

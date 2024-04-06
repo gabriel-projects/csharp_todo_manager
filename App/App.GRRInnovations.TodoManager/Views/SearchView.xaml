@@ -7,15 +7,14 @@
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="SearchView"
              x:DataType="vm:SearchViewModel">
-    <VerticalStackLayout Margin="10,20,0,0" BackgroundColor="LightYellow">
+    <VerticalStackLayout Margin="10,20,0,0">
 
         <Label FontSize="20" Text="Search" />
 
         <Border HorizontalOptions="Start"
                 StrokeShape="RoundRectangle 10,10,10,10"
                 StrokeThickness="1">
-            <SearchBar BackgroundColor="LightBlue"
-                       CancelButtonColor="Black"
+            <SearchBar CancelButtonColor="Black"
                        Placeholder="Tasks and more"
                        Text="{Binding TextSearch}">
                 <SearchBar.Behaviors>

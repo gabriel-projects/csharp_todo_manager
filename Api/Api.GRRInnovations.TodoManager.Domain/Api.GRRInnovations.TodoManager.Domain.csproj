@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <Folder Include="Wrappers\In\" />
+    <Folder Include="Wrappers\Out\" />
+  </ItemGroup>
+
 </Project>

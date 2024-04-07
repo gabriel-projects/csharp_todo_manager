@@ -2,12 +2,14 @@
 {
     public interface IUserModel : IBaseModel
     {
-        public string Login { get; set; }
+        string Login { get; set; }
 
-        public string Password { get; set; }
+        string Password { get; set; }
 
-        public bool BlockedAccess { get; set; }
+        bool BlockedAccess { get; set; }
 
-        public bool PendingConfirm { get; set; }
+        bool PendingConfirm { get; set; }
+
+        IUserDetailModel UserDetail { get; set; }
     }
 }

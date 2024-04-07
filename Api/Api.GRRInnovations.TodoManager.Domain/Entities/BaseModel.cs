@@ -1,6 +1,6 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
 
-namespace Api.GRRInnovations.TodoManager.Domain.Models
+namespace Api.GRRInnovations.TodoManager.Domain.Entities
 {
     public class BaseModel : IBaseModel
     {

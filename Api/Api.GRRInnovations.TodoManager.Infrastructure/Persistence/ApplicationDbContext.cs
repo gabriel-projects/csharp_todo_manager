@@ -1,4 +1,4 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
@@ -6,12 +6,26 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
 {
     public class ApplicationDbContext : DbContext
     {
+        internal DbSet<UserModel> Users { get; set; }
+        internal DbSet<UserDetailModel> UsersDetails { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            DefaultModelSetup<UserModel>(modelBuilder);
+            modelBuilder.Entity<UserModel>().Property(m => m.Login).IsRequired();
+            modelBuilder.Entity<UserModel>().Property(m => m.Password).IsRequired();
+            modelBuilder.Entity<UserModel>().HasIndex(m => m.Login).IncludeProperties(p => p.Password).IsUnique(false);
+            modelBuilder.Entity<UserModel>().HasIndex(m => m.Login).IsUnique();
+            modelBuilder.Entity<UserModel>().Ignore(m => m.UserDetail);
+
+            DefaultModelSetup<UserDetailModel>(modelBuilder);
+            modelBuilder.Entity<UserDetailModel>().Ignore(m => m.Parent);
+            modelBuilder.Entity<UserDetailModel>().HasOne(m => m.DbParent).WithOne(x => x.DbUserDetail).HasForeignKey<UserDetailModel>(x => x.ParentUid).OnDelete(DeleteBehavior.Cascade);
         }
 
         public override int SaveChanges()

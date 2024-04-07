@@ -1,8 +1,8 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
 
-namespace Api.GRRInnovations.TodoManager.Domain.Models
+namespace Api.GRRInnovations.TodoManager.Domain.Entities
 {
-    public class UserDetailModel : BaseModel, IUserDetailModel
+    public class UserDetailModel : BaseModel<UserModel, IUserModel>, IUserDetailModel
     {
         public string Name { get; set; }
         public string Email { get; set; }

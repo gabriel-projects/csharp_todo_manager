@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Interfaces.Models
 {
-    public interface IUserDetailModel
+    public interface IUserDetailModel : IBaseModel<IUserModel>
     {
         public string Name { get; set; }
 

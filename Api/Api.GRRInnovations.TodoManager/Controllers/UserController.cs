@@ -7,5 +7,15 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
+        public UserController()
+        {
+            
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> CreateUser() 
+        {
+            
+        }
     }
 }

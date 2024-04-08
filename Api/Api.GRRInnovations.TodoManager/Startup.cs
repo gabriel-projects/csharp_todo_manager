@@ -1,5 +1,11 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Extensions;
+using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
+using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
+using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
+using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Api.GRRInnovations.TodoManager.Services;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 namespace Api.GRRInnovations.TodoManager
@@ -20,8 +26,26 @@ namespace Api.GRRInnovations.TodoManager
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            services.AddDependencyInjectionExtension();
+            var assm = AppDomain.CurrentDomain.GetAssemblies()
+                .Where(p => p.FullName.StartsWith("Api")).ToList();
+
+            //services.AddDependencyInjectionExtension();
+
+
+            var connectionString = Configuration.GetConnectionString("SqlConnectionString");
+            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
+
+            Console.WriteLine($"sqlConnection Startup: {connectionString}");
+            Console.WriteLine($"databaseUrl Startup: {databaseUrl}");
+
+            var connection = string.IsNullOrEmpty(databaseUrl) ? connectionString : ConnectionHelper.BuildConnectionString(databaseUrl);
+
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
+
+            services.AddScoped<UserService>();
+            services.AddScoped<IUserRepository, UserRepository>();
         }
+
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

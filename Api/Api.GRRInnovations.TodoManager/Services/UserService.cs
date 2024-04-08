@@ -4,7 +4,6 @@ using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 
 namespace Api.GRRInnovations.TodoManager.Services
 {
-    [Ioc(Interface = typeof(UserService))]
     public class UserService
     {
         public IUserRepository UserRepository { get; }

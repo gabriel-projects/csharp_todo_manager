@@ -14,7 +14,9 @@ namespace Api.GRRInnovations.TodoManager.Domain.Extensions
     {
         public static void AddDependencyInjectionExtension(this IServiceCollection service)
         {
-            foreach (var assemblyName in Assembly.GetExecutingAssembly().GetReferencedAssemblies().Where(x => x.Name.Contains("GRRInnovations")))
+            var ass = Assembly.GetExecutingAssembly().GetReferencedAssemblies().Where(x => x.Name.Contains("GRRInnovations"));
+
+            foreach (var assemblyName in ass)
             {
                 Assembly assembly = Assembly.Load(assemblyName);
 

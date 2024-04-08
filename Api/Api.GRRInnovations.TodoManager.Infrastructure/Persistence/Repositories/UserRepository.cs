@@ -24,15 +24,16 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             model.Password = ConvertPassword(model.Password);
 
-            if (string.IsNullOrEmpty(model.UserDetail.Name))
+            if (model.UserDetail != null && string.IsNullOrEmpty(model.UserDetail?.Name))
             {
-                var firsName = model.UserDetail.FirstName ?? "";
-                var lastName = model.UserDetail.LastName ?? "";
+                var firsName = model.UserDetail?.FirstName ?? "";
+                var lastName = model.UserDetail?.LastName ?? "";
 
                 model.UserDetail.Name = $"{firsName} {lastName}";
             }
 
             await Context.Users.AddAsync(model).ConfigureAwait(false);
+            await Context.SaveChangesAsync().ConfigureAwait(false);
 
             return model;
         }

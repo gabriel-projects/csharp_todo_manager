@@ -22,7 +22,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> CreateUser(WrapperInUser<UserModel, UserDetailModel> wrapperInUser) 
+        public async Task<ActionResult> CreateUser([FromBody] WrapperInUser<UserModel, UserDetailModel> wrapperInUser) 
         {
             if (string.IsNullOrEmpty(wrapperInUser.Login) || string.IsNullOrEmpty(wrapperInUser.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
 

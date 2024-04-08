@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
 
 namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
 {
-    public class IUserRepository
+    public interface IUserRepository
     {
+        Task<List<IUserModel>> Users(UserOptions userOptions);
+
+        Task<IUserModel> Create(IUserModel userModel);
+    }
+
+    public class UserOptions
+    {
+        public List<Guid> FilterUsers { get; set; }
+
+        public List<string> FilterLogins { get; set; }
     }
 }

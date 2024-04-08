@@ -12,7 +12,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
 
         public string Email { get; set; }
 
-        public string FirtsName { get; set; }
+        public string FirstName { get; set; }
 
         public string LastName { get; set; }
     }

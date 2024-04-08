@@ -12,40 +12,44 @@ namespace Api.GRRInnovations.TodoManager.Domain.Extensions
 {
     public static class DependencyInjectionExtension
     {
-        public static void AddDependencyInjectionExtension(this IServiceCollection service, Assembly assembly)
+        public static void AddDependencyInjectionExtension(this IServiceCollection service)
         {
-            IEnumerable<TypeInfo> definedTypes = assembly.DefinedTypes;
-            foreach (TypeInfo item in definedTypes)
+            foreach (var assemblyName in Assembly.GetExecutingAssembly().GetReferencedAssemblies().Where(x => x.Name.Contains("GRRInnovations")))
             {
-                if (item.IsAbstract)
-                {
-                    continue;
-                }
+                Assembly assembly = Assembly.Load(assemblyName);
 
-                object[] customAttributes = item.GetCustomAttributes(typeof(IocAttribute), inherit: false);
-                object[] customAttributes2 = item.GetCustomAttributes(typeof(SingletonAttribute), inherit: false);
-                object[] array = customAttributes;
-                foreach (object obj in array)
+                IEnumerable<TypeInfo> definedTypes = assembly.DefinedTypes;
+
+                foreach (TypeInfo item in definedTypes)
                 {
-                    IocAttribute iocAttribute = obj as IocAttribute;
-                    if (iocAttribute != null)
+                    if (item.IsAbstract)
                     {
-                        service.AddScoped(iocAttribute.Interface, item);
+                        continue;
                     }
-                }
 
-                object[] array2 = customAttributes2;
-                foreach (object obj2 in array2)
-                {
-                    SingletonAttribute singletonAttribute = obj2 as SingletonAttribute;
-                    if (singletonAttribute != null)
+                    object[] customAttributes = item.GetCustomAttributes(typeof(IocAttribute), inherit: false);
+                    object[] customAttributes2 = item.GetCustomAttributes(typeof(SingletonAttribute), inherit: false);
+                    object[] array = customAttributes;
+                    foreach (object obj in array)
                     {
-                        service.AddSingleton(singletonAttribute.Interface, item);
+                        IocAttribute iocAttribute = obj as IocAttribute;
+                        if (iocAttribute != null)
+                        {
+                            service.AddScoped(iocAttribute.Interface, item);
+                        }
+                    }
+
+                    object[] array2 = customAttributes2;
+                    foreach (object obj2 in array2)
+                    {
+                        SingletonAttribute singletonAttribute = obj2 as SingletonAttribute;
+                        if (singletonAttribute != null)
+                        {
+                            service.AddSingleton(singletonAttribute.Interface, item);
+                        }
                     }
                 }
             }
         }
     }
-
-    
 }

@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Api.GRRInnovations.TodoManager.Domain.Extensions;
+using Microsoft.AspNetCore.Builder;
+using System.Reflection;
 
 namespace Api.GRRInnovations.TodoManager
 {
@@ -17,6 +19,8 @@ namespace Api.GRRInnovations.TodoManager
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+
+            services.AddDependencyInjectionExtension();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -30,11 +34,14 @@ namespace Api.GRRInnovations.TodoManager
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
             app.UseAuthorization();
 
-            app.MapControllers();
-
-            app.Run();
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
         }
     }
 }

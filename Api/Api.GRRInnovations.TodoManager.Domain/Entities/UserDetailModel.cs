@@ -6,7 +6,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
     {
         public string Name { get; set; }
         public string Email { get; set; }
-        public string FirtsName { get; set; }
+        public string FirstName { get; set; }
         public string LastName { get; set; }
     }
 }

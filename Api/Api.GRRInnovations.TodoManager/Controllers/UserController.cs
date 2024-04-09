@@ -1,12 +1,8 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Services;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.IO;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {

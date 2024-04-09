@@ -35,7 +35,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Models
 
             if (Model == null) return claims;
 
-            claims.Add(new Claim(ClaimEmail, Model.UserDetail.Email ?? ""));
+            claims.Add(new Claim(ClaimEmail, Model.UserDetail?.Email ?? ""));
             claims.Add(new Claim(ClaimUserUid, Model.Uid.ToString()));
 
             return claims;

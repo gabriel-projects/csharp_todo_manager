@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Data;
+using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.Out
 {
@@ -11,38 +12,38 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.Out
 
         public WrapperOutUser(IUserModel data) : base(data) { }
 
-        [JsonProperty("uid")]
+        [JsonPropertyName("uid")]
         public Guid Uid
         {
             get => Data.Uid;
             set => Data.Uid = value;
         }
 
-        //[JsonProperty("detail")]
+        //[JsonPropertyName("detail")]
         //public WrapperOutUserDetailLimited Detail { get; set; }
 
-        [JsonProperty("pending_confirm")]
+        [JsonPropertyName("pending_confirm")]
         public bool PendingConfirm
         {
             get => Data.PendingConfirm;
             set => Data.PendingConfirm = value;
         }
 
-        [JsonProperty("blocked_access")]
+        [JsonPropertyName("blocked_access")]
         public bool BlockedAccess
         {
             get => Data.BlockedAccess;
             set => Data.BlockedAccess = value;
         }
 
-        [JsonProperty("created_at")]
+        [JsonPropertyName("created_at")]
         public DateTime CreatedAt
         {
             get => Data.CreatedAt;
             set => Data.CreatedAt = value;
         }
 
-        [JsonProperty("updated_at")]
+        [JsonPropertyName("updated_at")]
         public DateTime UpdatedAt
         {
             get => Data.UpdatedAt;

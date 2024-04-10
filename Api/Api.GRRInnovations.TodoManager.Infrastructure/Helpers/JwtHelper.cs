@@ -3,6 +3,7 @@ using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -17,7 +18,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
 {
     public static class JwtHelper
     {
-        private static string Key
+        public static string Key
         {
             get
             {
@@ -33,9 +34,60 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
             }
         }
 
-        private const string Issuer = "https://api.todo.manager.com.br";
+        public const string Issuer = "https://api.todo.manager.com.br";
 
         public static string Audience = "DefaultAudience";
+
+        public static async Task<JwtModel> FromJwt(string jwt, bool validateLifetime = true)
+        {
+            var info = Validate(jwt, validateLifetime);
+
+            if (info == null) return null;
+
+            var result = new JwtModel(info.Claims.ToList())
+            {
+                Jwt = jwt,
+                JwtToken = info,
+                NotBefore = info.ValidFrom,
+                ExpireAt = info.ValidTo
+            };
+
+            await result.CreateUserModel();
+
+            return result;
+        }
+
+        private static JwtSecurityToken Validate(string token, bool validateLifetime)
+        {
+            JwtSecurityToken reuslt = null;
+            try
+            {
+                var jwtKey = Encoding.UTF8.GetBytes(Key);
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var paramsValidation = new TokenValidationParameters()
+                {
+                    RequireExpirationTime = true,
+                    ValidateAudience = true,
+                    ValidateIssuer = true,
+                    ValidateLifetime = validateLifetime,
+                    IssuerSigningKey = new SymmetricSecurityKey(jwtKey),
+                    ValidAudience = Audience,
+                    ValidIssuer = Issuer
+                };
+
+                SecurityToken securityToken;
+                tokenHandler.ValidateToken(token, paramsValidation, out securityToken);
+
+                reuslt = tokenHandler.ReadJwtToken(token);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                return null;
+            }
+
+            return reuslt;
+        }
 
         public static async Task<WrapperOutJwtResult> JwtResult(IUserModel user)
         {

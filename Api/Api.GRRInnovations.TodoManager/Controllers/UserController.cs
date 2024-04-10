@@ -1,8 +1,12 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
+using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
 using Api.GRRInnovations.TodoManager.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -31,6 +35,20 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var wrapperModel = await wrapperInUser.Result();
 
             var model = await UserService.Create(wrapperModel).ConfigureAwait(false);
+            if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
+
+            var response = await WrapperOutUser.From(model).ConfigureAwait(false);
+            return new OkObjectResult(response);
+        }
+
+        [HttpGet("users")]
+        [Authorize]
+        public async Task<ActionResult> Users()
+        {
+            var user = await HttpContext.JwtInfo();
+            if (user == null) return Unauthorized(); //todo verificar se role é anonymus
+
+            var model = await UserService.Users().ConfigureAwait(false);
             if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
 
             var response = await WrapperOutUser.From(model).ConfigureAwait(false);

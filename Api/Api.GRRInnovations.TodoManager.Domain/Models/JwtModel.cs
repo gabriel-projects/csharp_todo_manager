@@ -1,12 +1,13 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Models
 {
     public class JwtModel
     {
-        private const string ClaimUserUid = "user_uid";
+        public const string ClaimUserUid = "user_uid";
         private const string ClaimEmail = "email";
 
         public JwtModel(IUserModel model)
@@ -18,6 +19,41 @@ namespace Api.GRRInnovations.TodoManager.Domain.Models
         {
             AdditionalClaims = claims ?? new List<Claim>();
         }
+
+        
+
+        public async Task CreateUserModel()
+        {
+            var detail = new UserDetailModel();
+
+            var user = new UserModel()
+            {
+                UserDetail = detail
+            };
+
+            foreach (var clam in AdditionalClaims.ToList())
+            {
+                switch (clam.Type)
+                {
+                    case ClaimUserUid:
+                        {
+                            user.Uid = Guid.Parse(clam.Value);
+                            break;
+                        }
+                    case ClaimTypes.Email:
+                        {
+                            detail.Email = clam.Value;
+                            break;
+                        }
+                    default:
+                        break;
+                }
+            }
+
+            Model = user;
+        }
+
+        public JwtSecurityToken JwtToken { get; set; }
 
         public List<Claim> AdditionalClaims { get; set; } = new List<Claim>();
 
@@ -35,7 +71,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Models
 
             if (Model == null) return claims;
 
-            claims.Add(new Claim(ClaimEmail, Model.UserDetail?.Email ?? ""));
+            claims.Add(new Claim(ClaimTypes.Email, Model.UserDetail?.Email ?? ""));
             claims.Add(new Claim(ClaimUserUid, Model.Uid.ToString()));
 
             return claims;

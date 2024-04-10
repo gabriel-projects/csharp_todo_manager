@@ -17,6 +17,11 @@ namespace Api.GRRInnovations.TodoManager.Services
             UserRepository = userRepository;
         }
 
+        public async Task<List<IUserModel>> Users()
+        {
+            return await UserRepository.Users(new UserOptions());
+        }
+
         public async Task<bool> LoginAvailable(string login)
         {
             var users = await UserRepository.Users(new UserOptions { FilterLogins = new List<string> { login } });
@@ -51,7 +56,7 @@ namespace Api.GRRInnovations.TodoManager.Services
             return remoteUser;
         }
 
-        public async Task<bool> CorrectPassword(string remotePassword, string localPassword)
+        private async Task<bool> CorrectPassword(string remotePassword, string localPassword)
         {
             if (remotePassword == null) return false;
 

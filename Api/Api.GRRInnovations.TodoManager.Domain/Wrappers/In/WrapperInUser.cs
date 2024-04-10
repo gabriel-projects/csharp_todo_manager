@@ -1,5 +1,6 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
 {
@@ -11,14 +12,14 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
 
         public WrapperInUser(TUser data) : base(data) { }
 
-        [JsonProperty("login")]
+        [JsonPropertyName("login")]
         public string Login
         {
             get => Data.Login;
             set => Data.Login = value;
         }
 
-        [JsonProperty("password")]
+        [JsonPropertyName("password")]
         public string Password
         {
             get => Data.Password;

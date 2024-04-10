@@ -75,6 +75,11 @@ namespace Api.GRRInnovations.TodoManager
                 app.UseSwaggerUI();
             }
 
+            //todo: mover para metodo async
+            //cron
+            var scope = app.ApplicationServices.CreateScope();
+            _ = MigrationHelper.ManageDataAsync(scope.ServiceProvider);
+
             app.UseHttpsRedirection();
 
             app.UseRouting();

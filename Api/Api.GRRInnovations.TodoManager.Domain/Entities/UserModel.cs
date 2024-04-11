@@ -14,5 +14,12 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
             get => DbUserDetail;
             set => DbUserDetail = value as UserDetailModel;
         }
+
+        public List<ITaskModel> Tasks
+        {
+
+        }
+
+
     }
 }

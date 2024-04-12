@@ -6,14 +6,8 @@ using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Interfaces.Models
 {
-    public interface IUserDetailModel : IBaseModel
+    public interface ICategoryModel : IBaseModel
     {
         public string Name { get; set; }
-
-        public string Email { get; set; }
-
-        public string FirstName { get; set; }
-
-        public string LastName { get; set; }
     }
 }

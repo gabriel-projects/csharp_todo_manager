@@ -31,4 +31,8 @@
     <ProjectReference Include="..\Api.GRRInnovations.TodoManager.Domain\Api.GRRInnovations.TodoManager.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Migrations\" />
+  </ItemGroup>
+
 </Project>

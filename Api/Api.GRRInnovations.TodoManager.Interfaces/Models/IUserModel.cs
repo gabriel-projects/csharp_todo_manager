@@ -9,9 +9,5 @@
         bool BlockedAccess { get; set; }
 
         bool PendingConfirm { get; set; }
-
-        IUserDetailModel UserDetail { get; set; }
-
-        List<ITaskModel> Tasks { get; set; }
     }
 }

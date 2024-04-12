@@ -9,6 +9,10 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
         internal DbSet<UserModel> Users { get; set; }
         internal DbSet<UserDetailModel> UsersDetails { get; set; }
 
+        internal DbSet<TaskModel> Tasks { get; set; }
+        internal DbSet<CategoryModel> Categories { get; set; }
+        internal DbSet<TaskCategoryModel> TasksCategories { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
 
@@ -22,10 +26,28 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
             modelBuilder.Entity<UserModel>().HasIndex(m => m.Login).IncludeProperties(p => p.Password).IsUnique(false);
             modelBuilder.Entity<UserModel>().HasIndex(m => m.Login).IsUnique();
             modelBuilder.Entity<UserModel>().Ignore(m => m.UserDetail);
+            modelBuilder.Entity<UserModel>().Ignore(m => m.Tasks);
 
             DefaultModelSetup<UserDetailModel>(modelBuilder);
-            modelBuilder.Entity<UserDetailModel>().Ignore(m => m.Parent);
-            modelBuilder.Entity<UserDetailModel>().HasOne(m => m.DbParent).WithOne(x => x.DbUserDetail).HasForeignKey<UserDetailModel>(x => x.ParentUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<UserDetailModel>().Ignore(m => m.User);
+            modelBuilder.Entity<UserDetailModel>().HasOne(m => m.User).WithOne(x => x.UserDetail).HasForeignKey<UserDetailModel>(x => x.UserUid).OnDelete(DeleteBehavior.Cascade);
+
+            DefaultModelSetup<TaskModel>(modelBuilder);
+            modelBuilder.Entity<TaskModel>().Ignore(m => m.TasksCategories);
+            modelBuilder.Entity<TaskModel>().Ignore(m => m.User);
+            modelBuilder.Entity<TaskModel>().HasOne(m => m.User).WithMany(m => m.Tasks).HasForeignKey(p => p.UserUid).OnDelete(DeleteBehavior.Cascade);
+
+
+            DefaultModelSetup<TaskCategoryModel>(modelBuilder);
+            modelBuilder.Entity<TaskCategoryModel>().Ignore(m => m.Category);
+            modelBuilder.Entity<TaskCategoryModel>().Ignore(m => m.Task);
+            modelBuilder.Entity<TaskCategoryModel>().HasIndex(p => new { p.TaskUid, p.CategoryUid }).IsUnique();
+            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.Task).WithMany(p => p.TasksCategories).HasForeignKey(p => p.TaskUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.Category).WithMany(p => p.TasksCategories).HasForeignKey("CategoryUid").OnDelete(DeleteBehavior.Cascade);
+
+            DefaultModelSetup<CategoryModel>(modelBuilder);
+            modelBuilder.Entity<CategoryModel>().Ignore(m => m.TasksCategories);
+            modelBuilder.Entity<CategoryModel>().HasMany(p => p.TasksCategories).WithOne(p => p.Category).OnDelete(DeleteBehavior.NoAction);
         }
 
         public override int SaveChanges()

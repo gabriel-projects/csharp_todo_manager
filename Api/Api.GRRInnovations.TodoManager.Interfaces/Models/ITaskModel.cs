@@ -2,7 +2,7 @@
 
 namespace Api.GRRInnovations.TodoManager.Interfaces.Models
 {
-    public interface ITaskModel : IBaseModel<IUserModel>
+    public interface ITaskModel : IBaseModel
     {
         public string Title { get; set; }
 

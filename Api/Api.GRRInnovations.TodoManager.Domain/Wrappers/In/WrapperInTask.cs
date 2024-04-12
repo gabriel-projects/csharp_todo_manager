@@ -1,11 +1,13 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
 {
-    public class WrapperInTask<TTask>: WrapperBase<TTask, WrapperInTask<TTask>>
+    public class WrapperInTask<TTask, TCategory>: WrapperBase<TTask, WrapperInTask<TTask, TCategory>>
         where TTask : ITaskModel
+        where TCategory : ICategoryModel
     {
         [JsonPropertyName("title")]
         public string Title

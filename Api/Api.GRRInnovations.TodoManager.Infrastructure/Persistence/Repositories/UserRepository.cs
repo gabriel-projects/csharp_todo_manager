@@ -6,7 +6,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 {
-    [Ioc(Interface = typeof(UserRepository))]
     public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext Context;
@@ -16,7 +15,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             this.Context = applicationDbContext;
         }
 
-        public async Task<IUserModel> Create(IUserModel userModel)
+        public async Task<IUserModel> CreateAsync(IUserModel userModel)
         {
             if (userModel is not UserModel model) return null;
 
@@ -38,7 +37,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return model;
         }
 
-        public async Task<List<IUserModel>> Users(UserOptions userOptions)
+        public async Task<List<IUserModel>> UsersAsync(UserOptions userOptions)
         {
             return await Query(userOptions).ToListAsync<IUserModel>();
         }
@@ -52,7 +51,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             return query;
         }
-
+        //todo: organizar por regions
         private string ConvertPassword(string password)
         {
             if (password.StartsWith("##no|compute##"))

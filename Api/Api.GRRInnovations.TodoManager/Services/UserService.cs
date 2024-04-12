@@ -19,12 +19,12 @@ namespace Api.GRRInnovations.TodoManager.Services
 
         public async Task<List<IUserModel>> Users()
         {
-            return await UserRepository.Users(new UserOptions());
+            return await UserRepository.UsersAsync(new UserOptions());
         }
 
         public async Task<bool> LoginAvailable(string login)
         {
-            var users = await UserRepository.Users(new UserOptions { FilterLogins = new List<string> { login } });
+            var users = await UserRepository.UsersAsync(new UserOptions { FilterLogins = new List<string> { login } });
 
             return users.Count == 0;
         }
@@ -33,12 +33,12 @@ namespace Api.GRRInnovations.TodoManager.Services
         {
             if (userModel == null) return null;
 
-            return await UserRepository.Create(userModel);
+            return await UserRepository.CreateAsync(userModel);
         }
 
         public async Task<IUserModel> Validade(string login, string password)
         {
-            var users = await UserRepository.Users(new UserOptions { FilterLogins = new List<string> { login } });
+            var users = await UserRepository.UsersAsync(new UserOptions { FilterLogins = new List<string> { login } });
 
             var remoteUser = users.FirstOrDefault();
             if (remoteUser != null && !await CorrectPassword(password, remoteUser.Password))

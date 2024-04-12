@@ -26,11 +26,8 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         {
             if (string.IsNullOrEmpty(wrapperInUser.Login) || string.IsNullOrEmpty(wrapperInUser.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
 
-            if (string.IsNullOrEmpty(wrapperInUser.Login) == false)
-            {
-                var available = await UserService.LoginAvailable(wrapperInUser.Login);
-                if (!available) return new BadRequestObjectResult(new WrapperOutError { Title = "Login já registrado." });
-            }
+            var available = await UserService.LoginAvailable(wrapperInUser.Login);
+            if (!available) return new BadRequestObjectResult(new WrapperOutError { Title = "Login já registrado." });
 
             var wrapperModel = await wrapperInUser.Result();
 

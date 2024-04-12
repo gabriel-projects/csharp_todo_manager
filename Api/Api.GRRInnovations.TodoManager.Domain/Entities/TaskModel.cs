@@ -12,15 +12,20 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public DateTime End { get; set; }
         public EStatusTask Status { get; set; } = EStatusTask.Pending;
         public EPriorityTask Priority { get; set; } = EPriorityTask.None;
-
         public UserModel User { get; set; }
         public Guid UserUid { get; set; }
 
-        public List<TaskCategoryModel>? TasksCategories { get; set; }
+        public List<TaskCategoryModel>? DbTasksCategories { get; set; }
+
+        public List<ITaskCategoryModel>? TasksCategories
+        {
+            get => DbTasksCategories?.Cast<ITaskCategoryModel>()?.ToList();
+            set => DbTasksCategories = value?.Cast<TaskCategoryModel>()?.ToList();
+        }
 
         public TaskModel()
         {
-            TasksCategories = new List<TaskCategoryModel>();
+            TasksCategories = new List<ITaskCategoryModel>();
         }
     }
 }

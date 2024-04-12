@@ -11,11 +11,17 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
     {
         public string Name { get; set; }
 
-        public List<TaskCategoryModel>? TasksCategories { get; set; }
+        public List<TaskCategoryModel>? DbTasksCategories { get; set; }
+
+        public List<ITaskCategoryModel>? TasksCategories
+        {
+            get => DbTasksCategories?.Cast<ITaskCategoryModel>()?.ToList();
+            set => DbTasksCategories = value?.Cast<TaskCategoryModel>()?.ToList();
+        }
 
         public CategoryModel()
         {
-            TasksCategories = new List<TaskCategoryModel>();
+            TasksCategories = new List<ITaskCategoryModel>();
         }
     }
 }

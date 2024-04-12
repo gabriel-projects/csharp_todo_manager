@@ -4,9 +4,9 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
 {
     public interface IUserRepository
     {
-        Task<List<IUserModel>> Users(UserOptions userOptions);
+        Task<List<IUserModel>> UsersAsync(UserOptions userOptions);
 
-        Task<IUserModel> Create(IUserModel userModel);
+        Task<IUserModel> CreateAsync(IUserModel userModel);
     }
 
     public class UserOptions

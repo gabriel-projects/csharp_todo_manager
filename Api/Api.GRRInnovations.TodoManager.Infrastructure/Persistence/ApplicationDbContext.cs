@@ -38,7 +38,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
             modelBuilder.Entity<TaskModel>().Ignore(m => m.TasksCategories);
             modelBuilder.Entity<TaskModel>().Ignore(m => m.User);
             modelBuilder.Entity<TaskModel>().HasOne(m => m.User).WithMany(m => m.Tasks).HasForeignKey(p => p.UserUid).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TaskModel>().Property(p => p.Start).HasConversion(new EnumToStringConverter<EStatusTask>());
+            modelBuilder.Entity<TaskModel>().Property(p => p.Status).HasConversion(new EnumToStringConverter<EStatusTask>());
             modelBuilder.Entity<TaskModel>().Property(p => p.Priority).HasConversion(new EnumToStringConverter<EPriorityTask>());
 
 
@@ -46,12 +46,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
             modelBuilder.Entity<TaskCategoryModel>().Ignore(m => m.Category);
             modelBuilder.Entity<TaskCategoryModel>().Ignore(m => m.Task);
             modelBuilder.Entity<TaskCategoryModel>().HasIndex(p => new { p.TaskUid, p.CategoryUid }).IsUnique();
-            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.Task).WithMany(p => p.TasksCategories).HasForeignKey(p => p.TaskUid).OnDelete(DeleteBehavior.Cascade);
-            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.Category).WithMany(p => p.TasksCategories).HasForeignKey("CategoryUid").OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.DbTask).WithMany(p => p.DbTasksCategories).HasForeignKey(p => p.TaskUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TaskCategoryModel>().HasOne(p => p.DbCategory).WithMany(p => p.DbTasksCategories).HasForeignKey("CategoryUid").OnDelete(DeleteBehavior.Cascade);
 
             DefaultModelSetup<CategoryModel>(modelBuilder);
             modelBuilder.Entity<CategoryModel>().Ignore(m => m.TasksCategories);
-            modelBuilder.Entity<CategoryModel>().HasMany(p => p.TasksCategories).WithOne(p => p.Category).OnDelete(DeleteBehavior.NoAction);
+            modelBuilder.Entity<CategoryModel>().HasMany(p => p.DbTasksCategories).WithOne(p => p.DbCategory).OnDelete(DeleteBehavior.NoAction);
+
         }
 
         public override int SaveChanges()

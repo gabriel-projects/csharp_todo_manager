@@ -3,6 +3,7 @@ using System;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240412211722_add converters")]
+    partial class addconverters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -210,21 +212,21 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskCategoryModel", b =>
                 {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", "DbCategory")
-                        .WithMany("DbTasksCategories")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", "Category")
+                        .WithMany("TasksCategories")
                         .HasForeignKey("CategoryUid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", "DbTask")
-                        .WithMany("DbTasksCategories")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", "Task")
+                        .WithMany("TasksCategories")
                         .HasForeignKey("TaskUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("DbCategory");
+                    b.Navigation("Category");
 
-                    b.Navigation("DbTask");
+                    b.Navigation("Task");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
@@ -251,12 +253,12 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", b =>
                 {
-                    b.Navigation("DbTasksCategories");
+                    b.Navigation("TasksCategories");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
                 {
-                    b.Navigation("DbTasksCategories");
+                    b.Navigation("TasksCategories");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", b =>

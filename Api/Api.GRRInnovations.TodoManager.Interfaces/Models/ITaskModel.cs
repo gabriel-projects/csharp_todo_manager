@@ -17,5 +17,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
         public EStatusTask Status { get; set; }
 
         public EPriorityTask Priority { get; set; }
+
+        public List<ITaskCategoryModel>? TasksCategories { get; set; }
     }
 }

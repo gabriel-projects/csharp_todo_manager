@@ -1,5 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
@@ -36,6 +38,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
             modelBuilder.Entity<TaskModel>().Ignore(m => m.TasksCategories);
             modelBuilder.Entity<TaskModel>().Ignore(m => m.User);
             modelBuilder.Entity<TaskModel>().HasOne(m => m.User).WithMany(m => m.Tasks).HasForeignKey(p => p.UserUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TaskModel>().Property(p => p.Start).HasConversion(new EnumToStringConverter<EStatusTask>());
+            modelBuilder.Entity<TaskModel>().Property(p => p.Priority).HasConversion(new EnumToStringConverter<EPriorityTask>());
 
 
             DefaultModelSetup<TaskCategoryModel>(modelBuilder);

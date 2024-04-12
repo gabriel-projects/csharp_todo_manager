@@ -2,6 +2,7 @@
 {
     public enum EPriorityTask
     {
+        None,
         Low,
         Medium,
         High,

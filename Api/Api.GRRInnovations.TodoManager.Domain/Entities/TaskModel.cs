@@ -10,8 +10,8 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public bool Recurrent { get; set; }
         public DateTime Start { get; set; }
         public DateTime End { get; set; }
-        public EStatusTask Status { get; set; }
-        public EPriorityTask Priority { get; set; }
+        public EStatusTask Status { get; set; } = EStatusTask.Pending;
+        public EPriorityTask Priority { get; set; } = EPriorityTask.None;
 
         public UserModel User { get; set; }
         public Guid UserUid { get; set; }

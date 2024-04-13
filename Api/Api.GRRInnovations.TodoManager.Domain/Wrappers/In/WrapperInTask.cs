@@ -1,13 +1,13 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Newtonsoft.Json;
+using System.Net;
 using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
 {
-    public class WrapperInTask<TTask, TCategory>: WrapperBase<TTask, WrapperInTask<TTask, TCategory>>
+    public class WrapperInTask<TTask>: WrapperBase<TTask, WrapperInTask<TTask>>
         where TTask : ITaskModel
-        where TCategory : ICategoryModel
     {
         [JsonPropertyName("title")]
         public string Title
@@ -50,5 +50,8 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
             get => Data.Priority;
             set => Data.Priority = value;
         }
+
+        [JsonProperty("category_name")]
+        public string CategoryName { get; set; }
     }
 }

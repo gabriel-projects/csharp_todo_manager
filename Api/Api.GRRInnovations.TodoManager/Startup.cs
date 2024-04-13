@@ -59,7 +59,7 @@ namespace Api.GRRInnovations.TodoManager
 
             var connection = string.IsNullOrEmpty(databaseUrl) ? connectionString : ConnectionHelper.BuildConnectionString(databaseUrl);
 
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
+            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection), );
 
             services.AddScoped<UserService>();
             services.AddScoped<IUserRepository, UserRepository>();

@@ -10,6 +10,7 @@ namespace Api.GRRInnovations.TodoManager.Services
 {
     public class UserService
     {
+        //todo: remover UserService e colocar no repositorio tudo
         public IUserRepository UserRepository { get; }
 
         public UserService(IUserRepository userRepository)

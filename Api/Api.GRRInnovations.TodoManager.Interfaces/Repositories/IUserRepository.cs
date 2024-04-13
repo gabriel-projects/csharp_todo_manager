@@ -6,6 +6,8 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
     {
         Task<List<IUserModel>> UsersAsync(UserOptions userOptions);
 
+        Task<IUserModel> GetAsync(Guid uid);
+
         Task<IUserModel> CreateAsync(IUserModel userModel);
     }
 

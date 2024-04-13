@@ -20,9 +20,14 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             this.Context = applicationDbContext;
         }
 
-        public async Task<ICategoryModel> CreateAsync(ICategoryModel categoryModel)
+        public async Task<ICategoryModel> CreateAsync(string name)
         {
-            if (categoryModel is not CategoryModel model) return null;
+            if (string.IsNullOrEmpty(name)) return null;
+
+            CategoryModel model = new CategoryModel
+            {
+                Name = name
+            };
 
             await Context.Categories.AddAsync(model).ConfigureAwait(false);
             await Context.SaveChangesAsync().ConfigureAwait(false);

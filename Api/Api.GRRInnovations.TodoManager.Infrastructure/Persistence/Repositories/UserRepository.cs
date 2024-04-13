@@ -61,5 +61,12 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             return BCrypt.Net.BCrypt.HashPassword(password, 10);
         }
+
+        public async Task<IUserModel> GetAsync(Guid uid)
+        {
+            //validar uuid
+
+            return await Context.Users.FirstOrDefaultAsync(x => x.Uid == uid);
+        }
     }
 }

@@ -24,18 +24,14 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             if (taskModel is not TaskModel taskM) return null;
             if (inUser is not UserModel userM) return null;
 
-            if (inCategory is CategoryModel categoryM)
+            if (inCategory != null && inCategory is CategoryModel categoryM)
             {
-                var category = await Context.Categories.FirstOrDefaultAsync(x => x.Name.Equals(categoryM.Name));
+                var taskCategory = new TaskCategoryModel
+                {
+                    CategoryUid = inCategory.Uid,
+                };
 
-                if (category == null)
-                {
-                    //criar categoria
-                }
-                else
-                {
-                    //vincular na categoria existente
-                }
+                taskM.DbTasksCategories.Add(taskCategory);
             }
 
             taskM.User = userM;

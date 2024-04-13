@@ -32,12 +32,12 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
 
             DefaultModelSetup<UserDetailModel>(modelBuilder);
             modelBuilder.Entity<UserDetailModel>().Ignore(m => m.User);
-            modelBuilder.Entity<UserDetailModel>().HasOne(m => m.User).WithOne(x => x.UserDetail).HasForeignKey<UserDetailModel>(x => x.UserUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<UserDetailModel>().HasOne(m => m.DbUser).WithOne(x => x.DbUserDetail).HasForeignKey<UserDetailModel>(x => x.UserUid).OnDelete(DeleteBehavior.Cascade);
 
             DefaultModelSetup<TaskModel>(modelBuilder);
             modelBuilder.Entity<TaskModel>().Ignore(m => m.TasksCategories);
             modelBuilder.Entity<TaskModel>().Ignore(m => m.User);
-            modelBuilder.Entity<TaskModel>().HasOne(m => m.User).WithMany(m => m.Tasks).HasForeignKey(p => p.UserUid).OnDelete(DeleteBehavior.Cascade);
+            modelBuilder.Entity<TaskModel>().HasOne(m => m.DbUser).WithMany(m => m.DbTasks).HasForeignKey(p => p.UserUid).OnDelete(DeleteBehavior.Cascade);
             modelBuilder.Entity<TaskModel>().Property(p => p.Status).HasConversion(new EnumToStringConverter<EStatusTask>());
             modelBuilder.Entity<TaskModel>().Property(p => p.Priority).HasConversion(new EnumToStringConverter<EPriorityTask>());
 

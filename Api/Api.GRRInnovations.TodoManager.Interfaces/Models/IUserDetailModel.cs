@@ -15,5 +15,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
         public string FirstName { get; set; }
 
         public string LastName { get; set; }
+
+        public IUserModel User { get; set; }
     }
 }

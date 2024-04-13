@@ -12,7 +12,13 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public DateTime End { get; set; }
         public EStatusTask Status { get; set; } = EStatusTask.Pending;
         public EPriorityTask Priority { get; set; } = EPriorityTask.None;
-        public UserModel User { get; set; }
+
+        public UserModel? DbUser { get; set; }
+        public IUserModel? User
+        {
+            get => DbUser;
+            set => DbUser = value as UserModel;
+        }
         public Guid UserUid { get; set; }
 
         public List<TaskCategoryModel>? DbTasksCategories { get; set; }

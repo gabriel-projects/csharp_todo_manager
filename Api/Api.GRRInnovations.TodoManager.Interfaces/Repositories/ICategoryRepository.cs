@@ -13,7 +13,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
 
         Task<ICategoryModel> GetAsync(string name);
 
-        Task<ICategoryModel> CreateAsync(ICategoryModel categoryModel);
+        Task<ICategoryModel> CreateAsync(string name);
     }
 
     public class CategoryOptions

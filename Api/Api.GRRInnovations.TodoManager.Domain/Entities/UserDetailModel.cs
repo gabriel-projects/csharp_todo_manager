@@ -10,6 +10,11 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public string LastName { get; set; }
 
         public Guid UserUid { get; set; }
-        public UserModel? User { get; set; }
+        public UserModel DbUser { get; set; }
+        public IUserModel User
+        {
+            get => DbUser;
+            set => DbUser = value as UserModel;
+        }
     }
 }

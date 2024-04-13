@@ -16,11 +16,13 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     {
         private readonly ITaskRepository TaskRepository;
         private readonly ICategoryRepository CategoryRepository;
+        private readonly IUserRepository UserRepository;
 
-        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository)
+        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository)
         {
             TaskRepository = taskRepository;
             CategoryRepository = categoryRepository;
+            UserRepository = userRepository;
         }
 
         [HttpPost]
@@ -28,20 +30,23 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         public async Task<ActionResult> CreateTask([FromBody] WrapperInTask<TaskModel> wrapperInTask)
         {
             //validar
-            var user = await HttpContext.JwtInfo();
-            if (user == null) return Unauthorized();
+            var jwtModel = await HttpContext.JwtInfo();
+            if (jwtModel == null) return Unauthorized();
 
-            var taskModel = await wrapperInTask.Result();
+            var wrapperModel = await wrapperInTask.Result();
 
             var category = await CategoryRepository.GetAsync(wrapperInTask.CategoryName);
             if (category == null)
             {
-                //criar
+                category = await CategoryRepository.CreateAsync(wrapperInTask.CategoryName);
             }
 
-            TaskRepository.CreatAsync(taskModel, user.Model);
+            var user = await UserRepository.GetAsync(jwtModel.Model.Uid);
 
-            return Ok();
+            var task = await TaskRepository.CreatAsync(wrapperModel, user, category);
+
+            var response = await WrapperOutTask.From(task).ConfigureAwait(false);
+            return new OkObjectResult(response);
         }
     }
 }

@@ -39,7 +39,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         }
 
         [HttpGet("users")]
-        [Authorize], us
+        [Authorize]
         public async Task<ActionResult> Users()
         {
             var user = await HttpContext.JwtInfo();

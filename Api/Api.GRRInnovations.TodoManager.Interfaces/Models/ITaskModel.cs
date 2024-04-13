@@ -19,5 +19,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
         public EPriorityTask Priority { get; set; }
 
         public List<ITaskCategoryModel>? TasksCategories { get; set; }
+
+        public IUserModel User { get; set; }
     }
 }

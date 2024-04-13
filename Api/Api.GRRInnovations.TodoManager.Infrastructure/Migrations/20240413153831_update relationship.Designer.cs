@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240412023615_initial")]
-    partial class initial
+    [Migration("20240413153831_update relationship")]
+    partial class updaterelationship
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -48,41 +48,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskCategoryModel", b =>
+            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
                 {
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryUid")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("TaskUid")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Uid");
-
-                    b.HasIndex("CategoryUid");
-
-                    b.HasIndex("TaskUid", "CategoryUid")
-                        .IsUnique();
-
-                    b.ToTable("TasksCategories");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.Property<Guid>("Uid")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -95,8 +67,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.Property<DateTime>("End")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Priority")
-                        .HasColumnType("integer");
+                    b.Property<string>("Priority")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<bool>("Recurrent")
                         .HasColumnType("boolean");
@@ -104,8 +77,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.Property<DateTime>("Start")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
+                    b.Property<string>("Status")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -121,6 +95,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Uid");
+
+                    b.HasIndex("CategoryUid");
 
                     b.HasIndex("UserUid");
 
@@ -208,62 +184,47 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskCategoryModel", b =>
+            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
                 {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", "Category")
-                        .WithMany("TasksCategories")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", "DbCategory")
+                        .WithMany("DbTasks")
                         .HasForeignKey("CategoryUid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", "Task")
-                        .WithMany("TasksCategories")
-                        .HasForeignKey("TaskUid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Category");
-
-                    b.Navigation("Task");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "User")
-                        .WithMany("Tasks")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "DbUser")
+                        .WithMany("DbTasks")
                         .HasForeignKey("UserUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("DbCategory");
+
+                    b.Navigation("DbUser");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.UserDetailModel", b =>
                 {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "User")
-                        .WithOne("UserDetail")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "DbUser")
+                        .WithOne("DbUserDetail")
                         .HasForeignKey("Api.GRRInnovations.TodoManager.Domain.Entities.UserDetailModel", "UserUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("DbUser");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", b =>
                 {
-                    b.Navigation("TasksCategories");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.Navigation("TasksCategories");
+                    b.Navigation("DbTasks");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("DbTasks");
 
-                    b.Navigation("UserDetail");
+                    b.Navigation("DbUserDetail")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

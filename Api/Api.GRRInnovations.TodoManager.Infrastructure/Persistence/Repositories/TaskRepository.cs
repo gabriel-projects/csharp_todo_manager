@@ -26,12 +26,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             if (inCategory != null && inCategory is CategoryModel categoryM)
             {
-                var taskCategory = new TaskCategoryModel
-                {
-                    CategoryUid = inCategory.Uid,
-                };
-
-                taskM.DbTasksCategories.Add(taskCategory);
+                taskM.Category = categoryM;
             }
 
             taskM.User = userM;

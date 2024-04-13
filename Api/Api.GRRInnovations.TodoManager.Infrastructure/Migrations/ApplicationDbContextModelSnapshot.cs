@@ -46,41 +46,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskCategoryModel", b =>
+            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
                 {
                     b.Property<Guid>("Uid")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("CategoryUid")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("TaskUid")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uuid");
-
-                    b.HasKey("Uid");
-
-                    b.HasIndex("CategoryUid");
-
-                    b.HasIndex("TaskUid", "CategoryUid")
-                        .IsUnique();
-
-                    b.ToTable("TasksCategories");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.Property<Guid>("Uid")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -121,6 +93,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Uid");
+
+                    b.HasIndex("CategoryUid");
 
                     b.HasIndex("UserUid");
 
@@ -208,62 +182,47 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskCategoryModel", b =>
+            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
                 {
                     b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", "DbCategory")
-                        .WithMany("DbTasksCategories")
+                        .WithMany("DbTasks")
                         .HasForeignKey("CategoryUid")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", "DbTask")
-                        .WithMany("DbTasksCategories")
-                        .HasForeignKey("TaskUid")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "DbUser")
+                        .WithMany("DbTasks")
+                        .HasForeignKey("UserUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("DbCategory");
 
-                    b.Navigation("DbTask");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "User")
-                        .WithMany("Tasks")
-                        .HasForeignKey("UserUid")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
+                    b.Navigation("DbUser");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.UserDetailModel", b =>
                 {
-                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "User")
-                        .WithOne("UserDetail")
+                    b.HasOne("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", "DbUser")
+                        .WithOne("DbUserDetail")
                         .HasForeignKey("Api.GRRInnovations.TodoManager.Domain.Entities.UserDetailModel", "UserUid")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("User");
+                    b.Navigation("DbUser");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.CategoryModel", b =>
                 {
-                    b.Navigation("DbTasksCategories");
-                });
-
-            modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.TaskModel", b =>
-                {
-                    b.Navigation("DbTasksCategories");
+                    b.Navigation("DbTasks");
                 });
 
             modelBuilder.Entity("Api.GRRInnovations.TodoManager.Domain.Entities.UserModel", b =>
                 {
-                    b.Navigation("Tasks");
+                    b.Navigation("DbTasks");
 
-                    b.Navigation("UserDetail");
+                    b.Navigation("DbUserDetail")
+                        .IsRequired();
                 });
 #pragma warning restore 612, 618
         }

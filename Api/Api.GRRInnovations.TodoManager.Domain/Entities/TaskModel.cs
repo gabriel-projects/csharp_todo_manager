@@ -13,25 +13,21 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public EStatusTask Status { get; set; } = EStatusTask.Pending;
         public EPriorityTask Priority { get; set; } = EPriorityTask.None;
 
-        public UserModel? DbUser { get; set; }
-        public IUserModel? User
+        public UserModel DbUser { get; set; }
+        public IUserModel User
         {
             get => DbUser;
             set => DbUser = value as UserModel;
         }
         public Guid UserUid { get; set; }
 
-        public List<TaskCategoryModel>? DbTasksCategories { get; set; }
-
-        public List<ITaskCategoryModel>? TasksCategories
+        public CategoryModel? DbCategory { get; set; }
+        public ICategoryModel Category
         {
-            get => DbTasksCategories?.Cast<ITaskCategoryModel>()?.ToList();
-            set => DbTasksCategories = value?.Cast<TaskCategoryModel>()?.ToList();
+            get => DbCategory;
+            set => DbCategory = value as CategoryModel;
         }
 
-        public TaskModel()
-        {
-            TasksCategories = new List<ITaskCategoryModel>();
-        }
+        public Guid CategoryUid { get; set; }
     }
 }

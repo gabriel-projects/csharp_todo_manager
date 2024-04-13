@@ -23,5 +23,10 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
             get => DbTasks?.Cast<ITaskModel>()?.ToList();
             set => DbTasks = value?.Cast<TaskModel>()?.ToList();
         }
+
+        public UserModel()
+        {
+            DbTasks = new List<TaskModel>();
+        }
     }
 }

@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
 {
-    public partial class initial : Migration
+    public partial class updaterelationship : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -52,9 +52,10 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                     Recurrent = table.Column<bool>(type: "boolean", nullable: false),
                     Start = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     End = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    Status = table.Column<int>(type: "integer", nullable: false),
-                    Priority = table.Column<int>(type: "integer", nullable: false),
+                    Status = table.Column<string>(type: "text", nullable: false),
+                    Priority = table.Column<string>(type: "text", nullable: false),
                     UserUid = table.Column<Guid>(type: "uuid", nullable: false),
+                    CategoryUid = table.Column<Guid>(type: "uuid", nullable: false),
                     UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
@@ -62,6 +63,11 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Tasks", x => x.Uid);
+                    table.ForeignKey(
+                        name: "FK_Tasks_Categories_CategoryUid",
+                        column: x => x.CategoryUid,
+                        principalTable: "Categories",
+                        principalColumn: "Uid");
                     table.ForeignKey(
                         name: "FK_Tasks_Users_UserUid",
                         column: x => x.UserUid,
@@ -95,48 +101,15 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
-            migrationBuilder.CreateTable(
-                name: "TasksCategories",
-                columns: table => new
-                {
-                    Uid = table.Column<Guid>(type: "uuid", nullable: false),
-                    TaskUid = table.Column<Guid>(type: "uuid", nullable: false),
-                    CategoryUid = table.Column<Guid>(type: "uuid", nullable: false),
-                    UpdatedBy = table.Column<Guid>(type: "uuid", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TasksCategories", x => x.Uid);
-                    table.ForeignKey(
-                        name: "FK_TasksCategories_Categories_CategoryUid",
-                        column: x => x.CategoryUid,
-                        principalTable: "Categories",
-                        principalColumn: "Uid");
-                    table.ForeignKey(
-                        name: "FK_TasksCategories_Tasks_TaskUid",
-                        column: x => x.TaskUid,
-                        principalTable: "Tasks",
-                        principalColumn: "Uid",
-                        onDelete: ReferentialAction.Cascade);
-                });
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_CategoryUid",
+                table: "Tasks",
+                column: "CategoryUid");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Tasks_UserUid",
                 table: "Tasks",
                 column: "UserUid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TasksCategories_CategoryUid",
-                table: "TasksCategories",
-                column: "CategoryUid");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TasksCategories_TaskUid_CategoryUid",
-                table: "TasksCategories",
-                columns: new[] { "TaskUid", "CategoryUid" },
-                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Users_Login",
@@ -155,16 +128,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
-                name: "TasksCategories");
+                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "UsersDetails");
 
             migrationBuilder.DropTable(
                 name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "Tasks");
 
             migrationBuilder.DropTable(
                 name: "Users");

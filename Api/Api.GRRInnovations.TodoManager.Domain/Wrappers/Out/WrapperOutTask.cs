@@ -42,21 +42,6 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.Out
             set => Data.Recurrent = value;
         }
 
-        [JsonPropertyName("start")]
-        public DateTime Start
-        {
-            get => Data.Start;
-            set => Data.Start = value;
-        }
-
-        [JsonPropertyName("end")]
-        public DateTime End
-        {
-            get => Data.End;
-            set => Data.End = value;
-        }
-
-
         [JsonProperty("status")]
         public string Status
         {

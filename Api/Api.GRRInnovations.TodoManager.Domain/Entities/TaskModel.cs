@@ -29,5 +29,15 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         }
 
         public Guid CategoryUid { get; set; }
+
+
+        public Guid TaskRecurrenceUid { get; set; }
+
+        public TaskRecurrence? DbTaskRecurrence { get; set; }
+        public ITaskRecurrence? TaskRecurrence
+        {
+            get => DbTaskRecurrence;
+            set => DbTaskRecurrence = value as TaskRecurrence;
+        }
     }
 }

@@ -29,20 +29,6 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
             set => Data.Recurrent = value;
         }
 
-        [JsonPropertyName("start")]
-        public DateTime Start
-        {
-            get => Data.Start.ToUniversalTime();
-            set => Data.Start = value;
-        }
-
-        [JsonPropertyName("end")]
-        public DateTime End
-        {
-            get => Data.End.ToUniversalTime();
-            set => Data.End = value;
-        }
-
         [JsonPropertyName("priority")]
         public string Priority
         {

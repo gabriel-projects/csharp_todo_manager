@@ -10,10 +10,6 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
 
         public bool Recurrent { get; set; }
 
-        public DateTime Start {  get; set; }
-
-        public DateTime End { get; set; }
-
         public EStatusTask Status { get; set; }
 
         public EPriorityTask Priority { get; set; }
@@ -21,5 +17,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Models
         public ICategoryModel? Category { get; set; }
 
         public IUserModel User { get; set; }
+
+        public ITaskRecurrence TaskRecurrence { get; set; }
     }
 }

@@ -6,7 +6,7 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
     {
         Task<ITaskModel> GetAsync(Guid id, TaskOptions options);
 
-        Task<ITaskModel> GetAllAsync(TaskOptions options);
+        Task<List<ITaskModel>> GetAllAsync(TaskOptions options);
 
         Task<ITaskModel> UpdateAsync(string json, ITaskModel task);
 

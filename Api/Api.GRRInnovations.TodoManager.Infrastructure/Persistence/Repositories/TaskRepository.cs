@@ -50,9 +50,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return result > 0;
         }
 
-        public Task<ITaskModel> GetAllAsync(TaskOptions options)
+        public async Task<List<ITaskModel>> GetAllAsync(TaskOptions options)
         {
-            throw new NotImplementedException();
+            return await Query(options).ToListAsync<ITaskModel>();
         }
 
         public async Task<ITaskModel> GetAsync(Guid id, TaskOptions options)

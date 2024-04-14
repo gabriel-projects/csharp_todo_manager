@@ -13,8 +13,8 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public EStatusTask Status { get; set; } = EStatusTask.Pending;
         public EPriorityTask Priority { get; set; } = EPriorityTask.None;
 
-        public UserModel DbUser { get; set; }
-        public IUserModel User
+        public UserModel? DbUser { get; set; }
+        public IUserModel? User
         {
             get => DbUser;
             set => DbUser = value as UserModel;
@@ -22,7 +22,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public Guid UserUid { get; set; }
 
         public CategoryModel? DbCategory { get; set; }
-        public ICategoryModel Category
+        public ICategoryModel? Category
         {
             get => DbCategory;
             set => DbCategory = value as CategoryModel;

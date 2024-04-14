@@ -1,7 +1,9 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,9 +39,15 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return taskM;
         }
 
-        public Task DeleteAsync(Guid Uid)
+        public async Task<bool> DeleteAsync(ITaskModel model)
         {
-            throw new NotImplementedException();
+            var data = model as TaskModel;
+            if (data == null) return false;
+
+            Context.Tasks.Remove(data);
+
+            var result = await Context.SaveChangesAsync().ConfigureAwait(false);
+            return result > 0;
         }
 
         public Task<ITaskModel> GetAllAsync(TaskOptions options)
@@ -47,23 +55,47 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<ITaskModel> GetAsync(Guid id)
+        public async Task<ITaskModel> GetAsync(Guid id, TaskOptions options)
         {
-            throw new NotImplementedException();
+            return await Query(options).FirstOrDefaultAsync(x => x.Uid == id);
         }
 
-        public Task<ITaskModel> UpdateAsync(ITaskModel task)
+        public async Task<ITaskModel> TaskCompletedAsync(ITaskModel model)
         {
-            throw new NotImplementedException();
+            var data = model as TaskModel;
+            if (data == null) return null;
+
+            data.Status = Interfaces.Enuns.EStatusTask.Completed;
+
+            Context.Tasks.Update(data);
+            await Context.SaveChangesAsync();
+
+            return data;
+        }
+
+        public async Task<ITaskModel> UpdateAsync(string json, ITaskModel model)
+        {
+            var data = model as TaskModel;
+            if (data == null) return null;
+
+            var wp = new WrapperInTask<TaskModel>();
+            await wp.Populate(data).ConfigureAwait(false);
+
+            JsonConvert.PopulateObject(json, wp);
+            data = await wp.Result().ConfigureAwait(false);
+
+            Context.Tasks.Update(data);
+            await Context.SaveChangesAsync();
+
+            return data;
         }
 
 
         #region querys
-        private IQueryable<UserModel> Query(UserOptions options)
+        private IQueryable<TaskModel> Query(TaskOptions options)
         {
-            var query = Context.Users.AsQueryable();
+            var query = Context.Tasks.AsQueryable();
 
-            if (options.FilterLogins != null) query = query.Where(p => options.FilterLogins.Contains(p.Login));
             if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
 
             return query;

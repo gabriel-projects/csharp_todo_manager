@@ -56,18 +56,31 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.Out
             set => Data.End = value;
         }
 
-        [JsonPropertyName("status")]
-        public EStatusTask Status
+
+        [JsonProperty("status")]
+        public string Status
         {
-            get => Data.Status;
-            set => Data.Status = value;
+            get => Data.Status.ToString();
+            set
+            {
+                if (Enum.TryParse(value, out EStatusTask status))
+                {
+                    Data.Status = status;
+                }
+            }
         }
 
-        [JsonPropertyName("priority")]
-        public EPriorityTask Priority
+        [JsonProperty("priority")]
+        public string Priority
         {
-            get => Data.Priority;
-            set => Data.Priority = value;
+            get => Data.Priority.ToString();
+            set
+            {
+                if (Enum.TryParse(value, out EPriorityTask priority))
+                {
+                    Data.Priority = priority;
+                }
+            }
         }
 
         [JsonPropertyName("created_at")]

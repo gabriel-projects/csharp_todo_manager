@@ -6,6 +6,8 @@ using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -85,7 +87,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             return new OkObjectResult(response);
         }
 
-        [HttpPost("uid/{taskUid}/update")]
+        [HttpPut("uid/{taskUid}/update")]
         [Authorize]
         public async Task<ActionResult> UpdateTask(Guid taskUid, [FromBody] WrapperInTask<TaskModel> wrapperInTask)
         {
@@ -95,7 +97,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Model.Uid } });
             if (task == null) return NotFound();
 
-            var json = await new StreamReader(Request.Body).ReadToEndAsync();
+            var json = JsonSerializer.Serialize(wrapperInTask);
 
             var result = await TaskRepository.UpdateAsync(json, task).ConfigureAwait(false);
             if (result == null) return UnprocessableEntity();

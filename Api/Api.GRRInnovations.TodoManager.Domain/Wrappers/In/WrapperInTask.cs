@@ -1,6 +1,5 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Newtonsoft.Json;
 using System.Net;
 using System.Text.Json.Serialization;
 
@@ -45,13 +44,20 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In
         }
 
         [JsonPropertyName("priority")]
-        public EPriorityTask Priority
+        public string Priority
         {
-            get => Data.Priority;
-            set => Data.Priority = value;
+            get => Data.Priority.ToString();
+            set
+            {
+                if (Enum.TryParse(value, true, out EPriorityTask action))
+                {
+                    Data.Priority = action;
+                }
+            }
         }
 
-        [JsonProperty("category_name")]
+        [JsonPropertyName("category_name")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
         public string CategoryName { get; set; }
     }
 }

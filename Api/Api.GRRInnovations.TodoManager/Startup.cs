@@ -4,6 +4,7 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Services;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -33,8 +34,6 @@ namespace Api.GRRInnovations.TodoManager
             var assm = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(p => p.FullName.StartsWith("Api")).ToList();
 
-            //services.AddDependencyInjectionExtension();
-
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -50,6 +49,20 @@ namespace Api.GRRInnovations.TodoManager
                         };
                     });
 
+            // learn more about https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore
+            services.AddApiVersioning(options =>
+            {
+                options.DefaultApiVersion = new ApiVersion(1);
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+                options.ApiVersionReader = ApiVersionReader.Combine(
+                    new UrlSegmentApiVersionReader(),
+                    new HeaderApiVersionReader("X-Api-Version"));
+            }).AddApiExplorer(options =>
+            {
+                options.GroupNameFormat = "'v'V";
+                options.SubstituteApiVersionInUrl = true;
+            });
 
             var connectionString = Configuration.GetConnectionString("SqlConnectionString");
             var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
@@ -66,7 +79,6 @@ namespace Api.GRRInnovations.TodoManager
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
         }
-
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {

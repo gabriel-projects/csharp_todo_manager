@@ -4,6 +4,7 @@ using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
@@ -11,7 +12,8 @@ using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
-    [Route("api/[controller]")]
+    [ApiVersion(1)]
+    [Route("api/v{v:apiVersion}/[controller]")]
     [ApiController]
     public class TaskController : ControllerBase
     {
@@ -52,6 +54,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
+            //filter only open
             var options = new TaskOptions()
             {
                 FilterUsers = new List<Guid> { jwtModel.Model.Uid }
@@ -104,7 +107,6 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var response = await WrapperOutTask.From(result).ConfigureAwait(false);
             return new OkObjectResult(response);
-
         }
 
         [HttpPost("uid/{taskUid}/completed")]

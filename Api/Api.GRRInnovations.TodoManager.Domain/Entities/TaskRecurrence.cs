@@ -14,7 +14,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public RecurrenceType RecurrenceType { get; set; }
         public DateTime Start { get; set; }
         public DateTime? End { get; set ; }
-        Guid TaskUid { get; set; }
+        public Guid TaskUid { get; set; }
         public TaskModel DbTask { get; set; }
         public ITaskModel Task
         {

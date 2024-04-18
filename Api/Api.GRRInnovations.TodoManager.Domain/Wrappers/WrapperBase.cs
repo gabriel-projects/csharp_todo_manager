@@ -29,24 +29,24 @@ namespace Api.GRRInnovations.TodoManager.Domain.Wrappers
         }
     }
 
-    public class WrapperBase<T, WT> : WrapperBase<T> where WT : WrapperBase<T, WT>
+    public class WrapperBase<T, TW> : WrapperBase<T> where TW : WrapperBase<T, TW>
     {
         public WrapperBase() { }
 
         public WrapperBase(T data) : base(data) { }
 
 
-        public static async Task<WT> From(T evt)
+        public static async Task<TW> From(T evt)
         {
-            var result = Activator.CreateInstance<WT>();
+            var result = Activator.CreateInstance<TW>();
             await result.Populate(evt).ConfigureAwait(false);
 
             return result;
         }
 
-        public static async Task<List<WT>> From(IEnumerable<T> evts)
+        public static async Task<List<TW>> From(IEnumerable<T> evts)
         {
-            var result = new List<WT>();
+            var result = new List<TW>();
 
             foreach (var evt in evts)
             {

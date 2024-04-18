@@ -11,4 +11,8 @@
     <Folder Include="Exceptions\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\App.GRRInnovations.TodoManager.Interfaces\App.GRRInnovations.TodoManager.Interfaces.csproj" />
+  </ItemGroup>
+
 </Project>

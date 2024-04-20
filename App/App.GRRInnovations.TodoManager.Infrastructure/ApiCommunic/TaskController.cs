@@ -2,7 +2,7 @@
 using App.GRRInnovations.TodoManager.Interfaces.ApiCommunic;
 using App.GRRInnovations.TodoManager.Interfaces.Models;
 
-namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic.Controllers
+namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
 {
     public class TaskController : BaseCommunic, ITaskController
     {
@@ -19,7 +19,7 @@ namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic.Controllers
             var result = new ResultCommunic<List<ITaskModel>>
             {
                 ResultType = tasks.ResultType,
-                Message = tasks.Message, 
+                Message = tasks.Message,
                 Value = taskModels
             };
 

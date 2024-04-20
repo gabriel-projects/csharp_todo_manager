@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic.Controllers
+namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
 {
     public class SigninController
     {

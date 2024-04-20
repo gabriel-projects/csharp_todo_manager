@@ -1,5 +1,5 @@
 ﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
-using App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic.Controllers;
+using App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic;
 using App.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using App.GRRInnovations.TodoManager.Interfaces.ApiCommunic;
 using App.GRRInnovations.TodoManager.Models;

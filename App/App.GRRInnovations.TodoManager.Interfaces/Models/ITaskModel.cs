@@ -1,6 +1,6 @@
 ﻿using App.GRRInnovations.TodoManager.Interfaces.Enuns;
 
-namespace App.GRRInnovations.TodoManager.Interfaces.Enuns
+namespace App.GRRInnovations.TodoManager.Interfaces.Models
 {
     public interface ITaskModel
     {

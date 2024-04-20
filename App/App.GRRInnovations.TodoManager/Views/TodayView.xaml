@@ -2,10 +2,8 @@
 <ContentPage x:Class="App.GRRInnovations.TodoManager.Views.TodayView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:apiModels="clr-namespace:App.GRRInnovations.TodoManager.Domain.ApiTodoManagerCommunic.Models;assembly=App.GRRInnovations.TodoManager.Domain"
-             xmlns:interfaces="clr-namespace:App.GRRInnovations.TodoManager.Interfaces.Enuns;assembly=App.GRRInnovations.TodoManager.Interfaces"
+             xmlns:interfaces="clr-namespace:App.GRRInnovations.TodoManager.Interfaces.Models;assembly=App.GRRInnovations.TodoManager.Interfaces"
              xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:models="clr-namespace:App.GRRInnovations.TodoManager.Models"
              xmlns:sys="clr-namespace:System;assembly=mscorlib"
              xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
              Title="TodayView"
@@ -28,7 +26,7 @@
             <CollectionView Grid.Row="1"
                             Margin="0,20,0,0"
                             BackgroundColor="LightBlue"
-                            ItemsSource="{Binding Appointments}">
+                            ItemsSource="{Binding Tasks}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="interfaces:ITaskModel">
                         <HorizontalStackLayout Margin="5,0,0,0">

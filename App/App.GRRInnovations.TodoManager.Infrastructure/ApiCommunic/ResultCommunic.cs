@@ -1,5 +1,5 @@
-﻿using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic;
-using App.GRRInnovations.TodoManager.Interfaces.Enuns;
+﻿using App.GRRInnovations.TodoManager.Interfaces.Enuns;
+using App.GRRInnovations.TodoManager.Interfaces.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;

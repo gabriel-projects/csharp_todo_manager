@@ -11,7 +11,7 @@ using System.Text;
 using System.Threading.Tasks;
 using App.GRRInnovations.TodoManager.Interfaces.Enuns;
 using App.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic;
+using App.GRRInnovations.TodoManager.Interfaces.Models;
 
 namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
 {

@@ -1,6 +1,5 @@
-﻿using App.GRRInnovations.TodoManager.Domain.ApiTodoManagerCommunic.Models;
-using App.GRRInnovations.TodoManager.Domain.Repositories;
-using App.GRRInnovations.TodoManager.Interfaces.Enuns;
+﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
+using App.GRRInnovations.TodoManager.Interfaces.Models;
 using App.GRRInnovations.TodoManager.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -9,15 +8,15 @@ namespace App.GRRInnovations.TodoManager.ViewModels
 {
     public partial class TodayViewModel : BaseViewModel
     {
-        private ITaskRepository AppointmentRepository { get; set; }
+        private ITaskRepository TaskRepository { get; set; }
 
-        public TodayViewModel(ITaskRepository appointmentRepository)
+        public TodayViewModel(ITaskRepository taskRepository)
         {
-            AppointmentRepository = appointmentRepository;
+            TaskRepository = taskRepository;
         }
 
         [ObservableProperty]
-        private List<ITaskModel> appointments = new List<ITaskModel>();
+        private List<ITaskModel> tasks = new List<ITaskModel>();
 
         [ObservableProperty]
         private bool isRefreshing;
@@ -35,14 +34,9 @@ namespace App.GRRInnovations.TodoManager.ViewModels
         {
             try
             {
-                var appointmentsRepo = await AppointmentRepository.Appointments();
+                var tasks = await TaskRepository.Appointments();
 
-                foreach (var app in appointmentsRepo)
-                {
-                    //var model = app as TaskModel;
-
-                    Appointments.Add(app);
-                }
+                Tasks.AddRange(tasks);
             }
             catch (Exception ex)
             {

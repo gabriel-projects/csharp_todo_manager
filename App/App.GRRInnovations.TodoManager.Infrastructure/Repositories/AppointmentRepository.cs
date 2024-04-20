@@ -1,6 +1,6 @@
 ﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
-using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic.Controllers;
-using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic.Models;
+using App.GRRInnovations.TodoManager.Interfaces.ApiCommunic;
+using App.GRRInnovations.TodoManager.Interfaces.Models;
 
 namespace App.GRRInnovations.TodoManager.Infrastructure.Repositories
 {

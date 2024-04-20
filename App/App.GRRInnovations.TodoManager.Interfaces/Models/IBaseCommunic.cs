@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic
+namespace App.GRRInnovations.TodoManager.Interfaces.Models
 {
     public interface IBaseCommunic : IDisposable
     {

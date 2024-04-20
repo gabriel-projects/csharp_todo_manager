@@ -1,5 +1,7 @@
 ﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
+using App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic.Controllers;
 using App.GRRInnovations.TodoManager.Infrastructure.Repositories;
+using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic.Controllers;
 using App.GRRInnovations.TodoManager.Models;
 using App.GRRInnovations.TodoManager.ViewModels;
 using App.GRRInnovations.TodoManager.Views;
@@ -32,22 +34,23 @@ namespace App.GRRInnovations.TodoManager
     		builder.Logging.AddDebug();
 #endif
 
-            builder.Services.AddSingleton<TodayViewModel>();
-            builder.Services.AddSingleton<TodayView>();
+            builder.Services.AddScoped<TodayViewModel>();
+            builder.Services.AddScoped<TodayView>();
 
-            builder.Services.AddSingleton<TabbedPageHomeViewModel>();
-            builder.Services.AddSingleton<TabbedPageHomeView>();
+            builder.Services.AddScoped<TabbedPageHomeViewModel>();
+            builder.Services.AddScoped<TabbedPageHomeView>();
 
-            builder.Services.AddSingleton<SearchView>();
-            builder.Services.AddSingleton<SearchViewModel>();
+            builder.Services.AddScoped<SearchView>();
+            builder.Services.AddScoped<SearchViewModel>();
 
-            builder.Services.AddSingleton<FutureView>();
-            builder.Services.AddSingleton<FutureViewModel>();
+            builder.Services.AddScoped<FutureView>();
+            builder.Services.AddScoped<FutureViewModel>();
 
-            builder.Services.AddSingleton<BundleView>();
-            builder.Services.AddSingleton<BundleViewModel>();
+            builder.Services.AddScoped<BundleView>();
+            builder.Services.AddScoped<BundleViewModel>();
 
-            builder.Services.AddScoped<IAppointmentRepository, AppointmentRepository>();
+            builder.Services.AddScoped<ITaskRepository, AppointmentRepository>();
+            builder.Services.AddScoped<ITaskController, TaskController>();
 
             return builder.Build();
         }

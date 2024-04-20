@@ -102,7 +102,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
         private static async Task<JwtResultModel> CreateJwt(IUserModel user)
         {
             var jwtData = new JwtModel(user);
-            var expireDiff = TimeSpan.FromHours(1);
+            var expireDiff = TimeSpan.FromDays(10);
 
             var jwtResult = await ToJwt(jwtData, expireDiff);
             return jwtResult;

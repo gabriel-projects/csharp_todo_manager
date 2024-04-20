@@ -96,7 +96,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
         {
             var query = Context.Tasks.AsQueryable();
 
-            if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
+            if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.UserUid));
 
             return query;
         }

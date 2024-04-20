@@ -6,14 +6,12 @@ using System.Threading.Tasks;
 
 namespace App.GRRInnovations.TodoManager.Interfaces.Enuns
 {
-    //TODO: MUDAR PARA INGLES
-    public enum EResult
+    public enum EPriorityTask
     {
-        Sucess,
-        ErroDeRegra,
-        Erro,
-        NaoEncontrado,
-        SemInternet,
-        ServidorNaoEncontrado
+        None,
+        Low,
+        Medium,
+        High,
+        Urgent
     }
 }

@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.GRRInnovations.TodoMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.GRRInnovations.TodoManager.Domain", "App.GRRInnovations.TodoManager.Domain\App.GRRInnovations.TodoManager.Domain.csproj", "{59195D8E-4218-48ED-96C8-AF852E68FEE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.GRRInnovations.TodoManager.Interfaces", "App.GRRInnovations.TodoManager.Interfaces\App.GRRInnovations.TodoManager.Interfaces.csproj", "{364B1A1A-F5FA-43D2-87E2-0B0B897B3EE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "App.GRRInnovations.TodoManager.Interfaces", "App.GRRInnovations.TodoManager.Interfaces\App.GRRInnovations.TodoManager.Interfaces.csproj", "{364B1A1A-F5FA-43D2-87E2-0B0B897B3EE2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

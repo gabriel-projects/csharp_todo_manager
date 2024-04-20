@@ -1,4 +1,6 @@
-﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
+﻿using App.GRRInnovations.TodoManager.Domain.ApiTodoManagerCommunic.Models;
+using App.GRRInnovations.TodoManager.Domain.Repositories;
+using App.GRRInnovations.TodoManager.Interfaces.Enuns;
 using App.GRRInnovations.TodoManager.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -7,15 +9,15 @@ namespace App.GRRInnovations.TodoManager.ViewModels
 {
     public partial class TodayViewModel : BaseViewModel
     {
-        private IAppointmentRepository AppointmentRepository { get; set; }
+        private ITaskRepository AppointmentRepository { get; set; }
 
-        public TodayViewModel(IAppointmentRepository appointmentRepository)
+        public TodayViewModel(ITaskRepository appointmentRepository)
         {
             AppointmentRepository = appointmentRepository;
         }
 
         [ObservableProperty]
-        private List<AppointmentModel> appointments = new List<AppointmentModel>();
+        private List<ITaskModel> appointments = new List<ITaskModel>();
 
         [ObservableProperty]
         private bool isRefreshing;
@@ -37,18 +39,9 @@ namespace App.GRRInnovations.TodoManager.ViewModels
 
                 foreach (var app in appointmentsRepo)
                 {
-                    Appointments.Add(new AppointmentModel
-                    {
-                        Completed = app.Completed,
-                        CreatedAt = app.CreatedAt,
-                        Description = app.Description,
-                        DueDate = app.DueDate,
-                        EndDate = app.EndDate,
-                        Id = app.Id,
-                        Recurrent = app.Recurrent,
-                        StartDate = app.StartDate,
-                        Title = app.Title
-                    });
+                    //var model = app as TaskModel;
+
+                    Appointments.Add(app);
                 }
             }
             catch (Exception ex)

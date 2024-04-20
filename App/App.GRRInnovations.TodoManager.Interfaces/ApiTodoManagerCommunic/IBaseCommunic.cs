@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GRRInnovations.TodoManager.Interfaces.ApiCommunic
+namespace App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic
 {
     public interface IBaseCommunic : IDisposable
     {
@@ -21,7 +21,7 @@ namespace App.GRRInnovations.TodoManager.Interfaces.ApiCommunic
         /// <summary>
         /// Método Get - Recebe os dados do server
         /// </summary>
-        Task<IResultCommunic<TResult>> GetAsync<TResult>();
+        Task<IResultCommunic<TResult>> GetAsync<TResult>(string actionApi);
 
         /// <summary>
         /// Método Delete - Exclui registros no Server

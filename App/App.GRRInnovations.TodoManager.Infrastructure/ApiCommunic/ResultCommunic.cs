@@ -1,4 +1,5 @@
-﻿using App.GRRInnovations.TodoManager.Interfaces.ApiCommunic;
+﻿using App.GRRInnovations.TodoManager.Interfaces.ApiTodoManagerCommunic;
+using App.GRRInnovations.TodoManager.Interfaces.Enuns;
 using System;
 using System.Collections.Generic;
 using System.Linq;

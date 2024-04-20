@@ -6,14 +6,11 @@ using System.Threading.Tasks;
 
 namespace App.GRRInnovations.TodoManager.Interfaces.Enuns
 {
-    //TODO: MUDAR PARA INGLES
-    public enum EResult
+    public  enum EHttpMethod
     {
-        Sucess,
-        ErroDeRegra,
-        Erro,
-        NaoEncontrado,
-        SemInternet,
-        ServidorNaoEncontrado
+        GET,
+        POST,
+        PUT, 
+        DELETE
     }
 }

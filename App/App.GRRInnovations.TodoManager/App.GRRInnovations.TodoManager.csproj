@@ -81,6 +81,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\App.GRRInnovations.TodoManager.Domain\App.GRRInnovations.TodoManager.Domain.csproj" />
 	  <ProjectReference Include="..\App.GRRInnovations.TodoManager.Infrastructure\App.GRRInnovations.TodoManager.Infrastructure.csproj" />
+	  <ProjectReference Include="..\App.GRRInnovations.TodoManager.Interfaces\App.GRRInnovations.TodoManager.Interfaces.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

@@ -1,8 +1,8 @@
-﻿using App.GRRInnovations.TodoManager.Interfaces.Enuns;
-using App.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
 using System.Text.Json.Serialization;
 
-namespace App.GRRInnovations.TodoManager.Domain.Models
+namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Models
 {
     public class TaskModel : ITaskModel
     {

@@ -1,5 +1,6 @@
-﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
-using App.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Services;
 using App.GRRInnovations.TodoManager.Models;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,11 +9,11 @@ namespace App.GRRInnovations.TodoManager.ViewModels
 {
     public partial class TodayViewModel : BaseViewModel
     {
-        private ITaskRepository TaskRepository { get; set; }
+        private ITaskService TaskService { get; set; }
 
-        public TodayViewModel(ITaskRepository taskRepository)
+        public TodayViewModel(ITaskService taskService)
         {
-            TaskRepository = taskRepository;
+            TaskService = taskService;
         }
 
         [ObservableProperty]
@@ -34,9 +35,11 @@ namespace App.GRRInnovations.TodoManager.ViewModels
         {
             try
             {
-                var tasks = await TaskRepository.Appointments();
-
-                Tasks.AddRange(tasks);
+                var resultTasks = await TaskService.GetTasks();
+                if (resultTasks.ResultType == EResult.Sucess)
+                {
+                    Tasks.AddRange(resultTasks.Value);
+                }
             }
             catch (Exception ex)
             {

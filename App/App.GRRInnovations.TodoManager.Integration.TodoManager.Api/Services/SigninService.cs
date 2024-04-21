@@ -4,12 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace App.GRRInnovations.TodoManager.Interfaces.Enuns
+namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Services
 {
-    public enum EStatusTask
+    public class SigninService
     {
-        Completed,
-        Pending,
-        Late
     }
 }

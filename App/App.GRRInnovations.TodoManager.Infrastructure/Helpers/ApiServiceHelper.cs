@@ -1,4 +1,4 @@
-﻿using App.GRRInnovations.TodoManager.Infrastructure.Singletons;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Singletons;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;

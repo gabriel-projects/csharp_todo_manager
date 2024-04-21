@@ -1,7 +1,5 @@
-﻿using App.GRRInnovations.TodoManager.Domain.Repositories;
-using App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic;
-using App.GRRInnovations.TodoManager.Infrastructure.Repositories;
-using App.GRRInnovations.TodoManager.Interfaces.ApiCommunic;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Services;
 using App.GRRInnovations.TodoManager.Models;
 using App.GRRInnovations.TodoManager.ViewModels;
 using App.GRRInnovations.TodoManager.Views;
@@ -49,8 +47,7 @@ namespace App.GRRInnovations.TodoManager
             builder.Services.AddScoped<BundleView>();
             builder.Services.AddScoped<BundleViewModel>();
 
-            builder.Services.AddScoped<ITaskRepository, AppointmentRepository>();
-            builder.Services.AddScoped<ITaskController, TaskController>();
+            builder.Services.AddScoped<ITaskService, TaskService>();
 
             return builder.Build();
         }

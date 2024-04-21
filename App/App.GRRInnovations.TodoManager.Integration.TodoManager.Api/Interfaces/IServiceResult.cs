@@ -1,8 +1,8 @@
-﻿using App.GRRInnovations.TodoManager.Interfaces.Enuns;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
 
-namespace App.GRRInnovations.TodoManager.Interfaces.Models
+namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces
 {
-    public interface IResultCommunic<T>
+    public interface IServiceResult<T>
     {
         /// <summary>
         /// Padrão = Resultado.Erro

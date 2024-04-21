@@ -9,55 +9,57 @@ using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
-using App.GRRInnovations.TodoManager.Interfaces.Enuns;
-using App.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using App.GRRInnovations.TodoManager.Interfaces.Models;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Extensions;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
 
-namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
+namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.ServicesConfiguration
 {
-    public abstract class BaseCommunic : IBaseCommunic, IDisposable
+    public abstract class ServiceBase : IServiceBase, IDisposable
     {
         static HttpClient Client;
         string Controller;
         string ApiAction;
+
+        //
         const string BASE_URL = "https://bcfd-191-5-227-92.ngrok-free.app/api/";
 
         //todo: criar uma anotação para nao nulo ou vazio
-        protected BaseCommunic([NotNull]string controller)
+        protected ServiceBase([NotNull]string controller)
         {
             Controller = controller;
             Configs(controller);
         }
 
-        public Task<IResultCommunic<TResult>> DeleteAsync<TResult>()
+        public Task<IServiceResult<TResult>> DeleteAsync<TResult>()
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IResultCommunic<TResult>> GetAsync<TResult>(string actionApi)
+        public async Task<IServiceResult<TResult>> GetAsync<TResult>(string actionApi)
         {
             ApiAction = actionApi;
             return await Command<TResult>(EHttpMethod.GET, null);
         }
 
-        public Task<IResultCommunic<TResult>> PostAsync<TData, TResult>(TData data)
+        public Task<IServiceResult<TResult>> PostAsync<TData, TResult>(TData data)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IResultCommunic<TResult>> PutAsync<TData, TResult>(TData data)
+        public Task<IServiceResult<TResult>> PutAsync<TData, TResult>(TData data)
         {
             throw new NotImplementedException();
         }
 
-        private async Task<IResultCommunic<TResult>> Command<TResult>(EHttpMethod method, object input, bool useToken = true)
+        private async Task<IServiceResult<TResult>> Command<TResult>(EHttpMethod method, object input, bool useToken = true)
         {
             if (Client.BaseAddress.ToString() != BASE_URL)
             {
                 CreateHttpClientAndConfigJson();
             }
 
-            ResultCommunic<TResult> result = new ResultCommunic<TResult>();
+            ServiceResult<TResult> result = new ServiceResult<TResult>();
             string actionName = string.Empty;
 
             //todo: verificar se podemos usar esse enum para os httpmethods
@@ -126,7 +128,7 @@ namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
                     {
                         var json = await response.Content.ReadAsStringAsync();
 
-                        result = JsonConvert.DeserializeObject<ResultCommunic<TResult>>(json);
+                        result = JsonConvert.DeserializeObject<ServiceResult<TResult>>(json);
                         result.ResultType = EResult.ErroDeRegra;
                     }
                     else
@@ -145,24 +147,24 @@ namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
                     string vRes = response.Content.ReadAsStringAsync().Result;
                     if (vRes.Contains("html") || vRes.Contains("<!"))
                     {
-                        result = new ResultCommunic<TResult>() { Message = "Address not found", ResultType = EResult.Erro };
+                        result = new ServiceResult<TResult>() { Message = "Address not found", ResultType = EResult.Erro };
                     }
                     else
                     {
                         var json = await response.Content.ReadAsStringAsync();
 
-                        result = JsonConvert.DeserializeObject<ResultCommunic<TResult>>(json);
+                        result = JsonConvert.DeserializeObject<ServiceResult<TResult>>(json);
                     }
                 }
                 else if (response.StatusCode == System.Net.HttpStatusCode.Unauthorized)
                 {
-                    result = new ResultCommunic<TResult>() { Message = "AppResources.SemAltorizacao", ResultType = EResult.Erro };
+                    result = new ServiceResult<TResult>() { Message = "AppResources.SemAltorizacao", ResultType = EResult.Erro };
                 }
                 else
                 {
                     var json = await response.Content.ReadAsStringAsync();
 
-                    result = JsonConvert.DeserializeObject<ResultCommunic<TResult>>(json);
+                    result = JsonConvert.DeserializeObject<ServiceResult<TResult>>(json);
                 }
                 if (response.StatusCode != HttpStatusCode.OK)
                 {
@@ -170,7 +172,7 @@ namespace App.GRRInnovations.TodoManager.Infrastructure.ApiCommunic
                     try
                     {
                         var json = await response.Content.ReadAsStringAsync();
-                        message = JsonConvert.DeserializeObject<ResultCommunic<TResult>>(json).Message;
+                        message = JsonConvert.DeserializeObject<ServiceResult<TResult>>(json).Message;
                     }
                     catch { }
                     if (string.IsNullOrEmpty(message))

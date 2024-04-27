@@ -3,6 +3,8 @@ using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces.Mode
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces.Services;
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Services;
 using App.GRRInnovations.TodoManager.Models;
+using App.GRRInnovations.TodoManager.Views.Popups;
+using CommunityToolkit.Maui.Views;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 
@@ -10,6 +12,8 @@ namespace App.GRRInnovations.TodoManager.ViewModels
 {
     public partial class TodayViewModel : BaseViewModel
     {
+        static Page Page => Application.Current?.MainPage ?? throw new NullReferenceException();
+
         private ITaskService TaskService { get; set; }
 
         public TodayViewModel(ITaskService taskService)
@@ -39,8 +43,8 @@ namespace App.GRRInnovations.TodoManager.ViewModels
                 var resultTasks = await TaskService.GetTasks();
                 if (resultTasks.ResultType == EResult.Sucess)
                 {
-                    Tasks.AddRange(resultTasks.Value);
-                }
+                    Tasks = resultTasks.Value;
+                } 
             }
             catch (Exception ex)
             {
@@ -61,6 +65,13 @@ namespace App.GRRInnovations.TodoManager.ViewModels
             {
                 System.Diagnostics.Debug.WriteLine(ex.ToString());
             }
+        }
+
+        [RelayCommand]
+        static void ShowAddTaskPopup()
+        {
+            var popup = new AddTaskPopup();
+            Page.ShowPopup(popup);
         }
     }
 }

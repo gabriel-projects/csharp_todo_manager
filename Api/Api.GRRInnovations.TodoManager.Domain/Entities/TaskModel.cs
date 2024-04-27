@@ -28,7 +28,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
             set => DbCategory = value as CategoryModel;
         }
 
-        public Guid CategoryUid { get; set; }
+        public Guid? CategoryUid { get; set; }
 
 
         public Guid TaskRecurrenceUid { get; set; }

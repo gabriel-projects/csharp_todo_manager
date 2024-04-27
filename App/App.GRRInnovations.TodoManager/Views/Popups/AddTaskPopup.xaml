@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<toolkit:Popup x:Class="App.GRRInnovations.TodoManager.Views.Popups.AddTaskPopup"
+               xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+               xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+               xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+    <Grid Padding="20" HorizontalOptions="CenterAndExpand">
+        <Label Text="Name of task" />
+        <Entry />
+
+        <Label Text="Description" />
+        <Entry />
+
+        <Button Text="Priority" />
+        <Button Text="Repeat" />
+    </Grid>
+</toolkit:Popup>

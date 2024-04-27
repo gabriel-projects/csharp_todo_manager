@@ -76,11 +76,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var wrapperModel = await wrapperInTask.Result();
 
-            var category = await CategoryRepository.GetAsync(wrapperInTask.CategoryName);
-            if (category == null)
-            {
-                category = await CategoryRepository.CreateAsync(wrapperInTask.CategoryName);
-            }
+            var category = await CreateCategoryIfNotExist(wrapperInTask);
 
             IUserModel user = await UserRepository.GetAsync(jwtModel.Model.Uid);
 
@@ -88,6 +84,19 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var response = await WrapperOutTask.From(task).ConfigureAwait(false);
             return new OkObjectResult(response);
+        }
+
+        private async Task<ICategoryModel> CreateCategoryIfNotExist(WrapperInTask<TaskModel> wrapperInTask)
+        {
+            if (string.IsNullOrEmpty(wrapperInTask.CategoryName)) return null;
+
+            var category = await CategoryRepository.GetAsync(wrapperInTask.CategoryName);
+            if (category == null)
+            {
+                return await CategoryRepository.CreateAsync(wrapperInTask.CategoryName);
+            }
+
+            return category;
         }
 
         [HttpPut("uid/{taskUid}/update")]

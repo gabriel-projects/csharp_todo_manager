@@ -41,6 +41,7 @@
             <AbsoluteLayout Grid.RowSpan="2">
                 <ImageButton AbsoluteLayout.LayoutBounds="1, 1, 60, 60"
                              AbsoluteLayout.LayoutFlags="PositionProportional"
+                             Command="{Binding ShowAddTaskPopupCommand}"
                              CornerRadius="30"
                              Source="button_add.png">
                     <ImageButton.Triggers>

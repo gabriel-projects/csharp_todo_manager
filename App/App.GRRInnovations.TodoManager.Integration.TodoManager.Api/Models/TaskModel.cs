@@ -1,5 +1,5 @@
 ﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
-using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
+using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces.Models;
 using System.Text.Json.Serialization;
 
 namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Models

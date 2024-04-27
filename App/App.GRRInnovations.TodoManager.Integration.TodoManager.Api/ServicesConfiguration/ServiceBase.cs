@@ -1,14 +1,8 @@
-﻿using Newtonsoft.Json.Serialization;
-using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
+﻿using Newtonsoft.Json;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
-using System.Linq;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Text;
-using System.Threading.Tasks;
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Extensions;
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Enums;
@@ -22,7 +16,7 @@ namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.ServicesCon
         string ApiAction;
 
         //
-        const string BASE_URL = "https://bcfd-191-5-227-92.ngrok-free.app/api/";
+        const string BASE_URL = "https://7ed8-191-5-227-92.ngrok-free.app/api/";
 
         //todo: criar uma anotação para nao nulo ou vazio
         protected ServiceBase([NotNull]string controller)
@@ -82,7 +76,7 @@ namespace App.GRRInnovations.TodoManager.Integration.TodoManager.Api.ServicesCon
 
                 if (Client.DefaultRequestHeaders.Authorization == null)
                 {
-                    Client.DefaultRequestHeaders.Add("authorization", $"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsInVzZXJfdWlkIjoiYzUxODI5ZGMtZTRmMi00MzNjLThjNDQtMDZiNWQ1ODAwNGJlIiwibmJmIjoxNzEzNjI3NDY5LCJleHAiOjE3MTQ0OTE0NjksImlhdCI6MTcxMzYyNzQ2OSwiaXNzIjoiaHR0cHM6Ly9hcGkudG9kby5tYW5hZ2VyLmNvbS5iciIsImF1ZCI6IkRlZmF1bHRBdWRpZW5jZSJ9.zhYzE7_usLRNtZiZQVU49nH_r7SFb70ECq1ErAU_nVQ");
+                    Client.DefaultRequestHeaders.Add("authorization", $"Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6IiIsInVzZXJfdWlkIjoiYzUxODI5ZGMtZTRmMi00MzNjLThjNDQtMDZiNWQ1ODAwNGJlIiwibmJmIjoxNzE0MjMwMTMyLCJleHAiOjE3MTUwOTQxMzIsImlhdCI6MTcxNDIzMDEzMiwiaXNzIjoiaHR0cHM6Ly9hcGkudG9kby5tYW5hZ2VyLmNvbS5iciIsImF1ZCI6IkRlZmF1bHRBdWRpZW5jZSJ9.sAhut3jAYsUqw2LqgJynXl2KXGbikUfx6vLbBHl7Y6k");
                 }
 
                 HttpResponseMessage response = new();

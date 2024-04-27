@@ -1,4 +1,4 @@
-﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces;
+﻿using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Interfaces.Services;
 using App.GRRInnovations.TodoManager.Integration.TodoManager.Api.Services;
 using App.GRRInnovations.TodoManager.Models;
 using App.GRRInnovations.TodoManager.ViewModels;

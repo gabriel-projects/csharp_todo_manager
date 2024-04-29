@@ -9,7 +9,11 @@ namespace App.GRRInnovations.TodoManager
         {
             InitializeComponent();
 
-            MainPage = new TabbedPageHomeView(viewModel);
+            //buscar token do cache
+            //validar token e usuario
+
+
+            MainPage = new LoginView();
         }
     }
 }

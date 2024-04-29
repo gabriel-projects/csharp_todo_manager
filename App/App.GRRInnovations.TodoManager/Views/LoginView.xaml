@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage x:Class="App.GRRInnovations.TodoManager.Views.LoginView"
+             xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             Padding="10">
+    <Grid RowDefinitions="*, 2*, *">
+        <HorizontalStackLayout Grid.Row="0"
+                               HorizontalOptions="Center"
+                               Spacing="10"
+                               VerticalOptions="Start">
+            <Label Text="Icon" />
+            <Label Text="TodoManager" />
+        </HorizontalStackLayout>
+
+        <Grid Grid.Row="1"
+              BackgroundColor="Bisque"
+              RowDefinitions="*,*">
+            <Image Aspect="AspectFit" Source="chart" />
+            <Label Grid.Row="1" Text="Organize ... " />
+        </Grid>
+
+
+        <VerticalStackLayout Grid.Row="2"
+                             BackgroundColor="Beige"
+                             Spacing="10"
+                             VerticalOptions="End">
+            <Button Text="Continuar com Google" />
+            <Button Text="Continuar com Apple" />
+            <Button Text="Continuar com e-mail" />
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

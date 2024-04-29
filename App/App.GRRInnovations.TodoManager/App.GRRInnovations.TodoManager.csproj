@@ -52,6 +52,7 @@
 	  <None Remove="appsettings.json" />
 	  <None Remove="Resources\Images\bate_papo_online.png" />
 	  <None Remove="Resources\Images\button_add.png" />
+	  <None Remove="Resources\Images\chart.png" />
 	  <None Remove="Resources\Images\engrenagem.png" />
 	  <None Remove="Resources\Images\foto_app.jpg" />
 	  <None Remove="Resources\Images\informacoes.png" />
@@ -91,10 +92,16 @@
 	  <MauiXaml Update="Views\FutureView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\LoginView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\Popups\AddTaskPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\SearchView.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\SigninSignupView.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\TabbedPageHomeView.xaml">
@@ -107,6 +114,12 @@
 
 	<ItemGroup>
 	  <Folder Include="PopupViews\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Views\LoginView.xaml.cs">
+	    <DependentUpon>LoginView.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

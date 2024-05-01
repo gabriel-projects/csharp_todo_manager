@@ -5,7 +5,7 @@ namespace App.GRRInnovations.TodoManager
 {
     public partial class App : Application
     {
-        public App(TabbedPageHomeViewModel viewModel)
+        public App(TabbedPageHomeViewModel tabbedPageViewModel, LoginViewModel loginViewModel)
         {
             InitializeComponent();
 
@@ -13,7 +13,7 @@ namespace App.GRRInnovations.TodoManager
             //validar token e usuario
 
 
-            MainPage = new LoginView();
+            MainPage = new LoginView(loginViewModel);
         }
     }
 }

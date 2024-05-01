@@ -2,7 +2,9 @@
 <ContentPage x:Class="App.GRRInnovations.TodoManager.Views.LoginView"
              xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             Padding="10">
+             xmlns:vm="clr-namespace:App.GRRInnovations.TodoManager.ViewModels"
+             Padding="10"
+             x:DataType="vm:LoginViewModel">
     <Grid RowDefinitions="*, 2*, *">
         <HorizontalStackLayout Grid.Row="0"
                                HorizontalOptions="Center"
@@ -22,11 +24,11 @@
 
         <VerticalStackLayout Grid.Row="2"
                              BackgroundColor="Beige"
-                             Spacing="10"
-                             VerticalOptions="End">
+                             Spacing="10">
             <Button Text="Continuar com Google" />
             <Button Text="Continuar com Apple" />
-            <Button Text="Continuar com e-mail" />
+            <Button Command="{Binding ContinueWithEmail}" Text="Continuar com e-mail" />
+
         </VerticalStackLayout>
     </Grid>
 </ContentPage>

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace App.GRRInnovations.TodoManager.ViewModels
 {
-    internal class SigninSignupViewModel
+    public class SigninSignupViewModel : BaseViewModel
     {
     }
 }

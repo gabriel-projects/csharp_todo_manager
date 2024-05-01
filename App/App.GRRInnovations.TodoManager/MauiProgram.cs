@@ -47,6 +47,15 @@ namespace App.GRRInnovations.TodoManager
             builder.Services.AddScoped<BundleView>();
             builder.Services.AddScoped<BundleViewModel>();
 
+            builder.Services.AddScoped<BundleView>();
+            builder.Services.AddScoped<BundleViewModel>();
+
+            builder.Services.AddScoped<SigninSignupView>();
+            builder.Services.AddScoped<SigninSignupViewModel>();
+
+            builder.Services.AddScoped<LoginView>();
+            builder.Services.AddScoped<LoginViewModel>();
+
             builder.Services.AddScoped<ITaskService, TaskService>();
 
             return builder.Build();

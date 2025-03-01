@@ -1,10 +1,11 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Extensions;
-using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
@@ -14,29 +15,16 @@ using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
+namespace Api.GRRInnovations.TodoManager.Infrastructure.Authentication
 {
-    public static class JwtHelper
+    public class JwtService : IJwtService
     {
-        public static string Key
+        private readonly JwtSettings _jwtSettings;
+
+        public JwtService(IOptions<JwtSettings> jwtSettings)
         {
-            get
-            {
-                var jwtKey = Environment.GetEnvironmentVariable("JwtKey");
-
-                if (string.IsNullOrEmpty(jwtKey))
-                {
-                    //todo mover para appsetings
-                    jwtKey = "6040E308-8AF2-4639-B7D7-57B405A4DA42-C33BF5B8-B498-4464-9769-FD09388DA06D";
-                }
-
-                return jwtKey;
-            }
+            _jwtSettings = jwtSettings.Value;
         }
-
-        public const string Issuer = "https://api.todo.manager.com.br";
-
-        public static string Audience = "DefaultAudience";
 
         public static async Task<JwtModel> FromJwt(string jwt, bool validateLifetime = true)
         {
@@ -93,13 +81,10 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
         {
             var jwtResult = await CreateJwt(user).ConfigureAwait(false);
 
-            var wrapper = new WrapperOutJwtResult();
-            await wrapper.Populate(jwtResult).ConfigureAwait(false);
-
-            return wrapper;
+            return jwtResult;
         }
 
-        private static async Task<JwtResultModel> CreateJwt(IUserModel user)
+        private static async Task<WrapperOutJwtResult> CreateJwt(IUserModel user)
         {
             var jwtData = new JwtModel(user);
             var expireDiff = TimeSpan.FromDays(10);
@@ -108,7 +93,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
             return jwtResult;
         }
 
-        private static Task<JwtResultModel> ToJwt(JwtModel data, TimeSpan expireDiff)
+        private static Task<WrapperOutJwtResult> ToJwt(JwtModel data, TimeSpan expireDiff)
         {
             if (data.NotBefore == null) data.NotBefore = DateTime.Now;
 
@@ -117,12 +102,12 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
             return ToJwt(data, data.NotBefore.Value, data.ExpireAt.Value);
         }
 
-        private static Task<JwtResultModel> ToJwt(JwtModel data, DateTime createdAt, DateTime expireAt)
+        private static Task<WrapperOutJwtResult> ToJwt(JwtModel data, DateTime createdAt, DateTime expireAt)
         {
             return InternalToJwt(data, createdAt, expireAt);
         }
 
-        private static async Task<JwtResultModel> InternalToJwt(JwtModel data, DateTime createdAt, DateTime expireAt)
+        private static async Task<WrapperOutJwtResult> InternalToJwt(JwtModel data, DateTime createdAt, DateTime expireAt)
         {
             var jwtKey = Encoding.UTF8.GetBytes(Key);
             var securityKey = new SymmetricSecurityKey(jwtKey);
@@ -140,7 +125,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
                 Expires = expireAt
             });
 
-            var result = new JwtResultModel
+            var result = new WrapperOutJwtResult
             {
                 AccessToken = handler.WriteToken(securityToken),
                 Expire = expireAt.TimeStamp(),
@@ -148,6 +133,53 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
             };
 
             return result;
+        }
+
+        public string GenerateToken(IUserModel user)
+        {
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.Secret));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var claims = new[]
+            {
+                new Claim(ClaimTypes.NameIdentifier, user.Uid.ToString()),
+                new Claim(ClaimTypes.Email, user.UserDetail.Email)
+            };
+
+            var token = new JwtSecurityToken(
+                _jwtSettings.Issuer,
+                _jwtSettings.Audience,
+                claims,
+                expires: DateTime.UtcNow.AddMinutes(_jwtSettings.ExpirationMinutes),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public ClaimsPrincipal? ValidateToken(string token)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = Encoding.UTF8.GetBytes(_jwtSettings.Secret);
+
+            try
+            {
+                var principal = tokenHandler.ValidateToken(token, new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidateAudience = true,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = _jwtSettings.Issuer,
+                    ValidAudience = _jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(key)
+                }, out _);
+
+                return principal;
+            }
+            catch
+            {
+                return null;
+            }
         }
     }
 }

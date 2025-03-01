@@ -1,7 +1,9 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Extensions;
+using Api.GRRInnovations.TodoManager.Infrastructure.Authentication;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Services;
 using Asp.Versioning;
@@ -43,9 +45,9 @@ namespace Api.GRRInnovations.TodoManager
                             ValidateAudience = false,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer = JwtHelper.Issuer,
-                            ValidAudience = JwtHelper.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtHelper.Key))
+                            ValidIssuer = JwtService.Issuer,
+                            ValidAudience = JwtService.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtService.Key))
                         };
                     });
 
@@ -78,6 +80,9 @@ namespace Api.GRRInnovations.TodoManager
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
+
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+            services.AddSingleton<IJwtService, JwtService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

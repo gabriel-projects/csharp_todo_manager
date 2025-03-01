@@ -1,6 +1,5 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Domain.Models;
-using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
+using Api.GRRInnovations.TodoManager.Infrastructure.Authentication;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -35,7 +34,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
             {
                 var token = await context.Request.Jwt();
 
-                var response = await JwtHelper.FromJwt(token, validateLifeTime).ConfigureAwait(false);
+                var response = await JwtService.FromJwt(token, validateLifeTime).ConfigureAwait(false);
                 if (response == null) return null;
 
                 return response;

@@ -1,5 +1,4 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Entities
 {

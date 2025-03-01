@@ -1,6 +1,6 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
-using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
+using Api.GRRInnovations.TodoManager.Infrastructure.Authentication;
 using Api.GRRInnovations.TodoManager.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
@@ -29,7 +29,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var remoteUser = await this.UserService.Validade(wrapperInLogin.Login, wrapperInLogin.Password).ConfigureAwait(false);
             if (remoteUser == null) return new UnauthorizedResult();
 
-            var response = await JwtHelper.JwtResult(remoteUser).ConfigureAwait(false);
+            var response = await JwtService.JwtResult(remoteUser).ConfigureAwait(false);
 
             return response;
         }

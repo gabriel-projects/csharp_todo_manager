@@ -2,6 +2,7 @@
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Asp.Versioning;
@@ -20,12 +21,14 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         private readonly ITaskRepository TaskRepository;
         private readonly ICategoryRepository CategoryRepository;
         private readonly IUserRepository UserRepository;
+        private readonly IJwtService _jwtService;
 
-        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository)
+        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IJwtService jwtService)
         {
             TaskRepository = taskRepository;
             CategoryRepository = categoryRepository;
             UserRepository = userRepository;
+            _jwtService = jwtService;
         }
 
         [HttpGet("uid/{taskUid}")]
@@ -37,7 +40,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var options = new TaskOptions()
             {
-                FilterUsers = new List<Guid> { jwtModel.Model.Uid }
+                FilterUsers = new List<Guid> { jwtModel.Uid }
             };
 
             var task = await TaskRepository.GetAsync(taskUid, options);
@@ -57,7 +60,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             //filter only open
             var options = new TaskOptions()
             {
-                FilterUsers = new List<Guid> { jwtModel.Model.Uid }
+                FilterUsers = new List<Guid> { jwtModel.Uid }
             };
 
             var tasks = await TaskRepository.GetAllAsync(options);
@@ -78,7 +81,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var category = await CreateCategoryIfNotExist(wrapperInTask);
 
-            IUserModel user = await UserRepository.GetAsync(jwtModel.Model.Uid);
+            IUserModel user = await UserRepository.GetAsync(jwtModel.Uid);
 
             var task = await TaskRepository.CreatAsync(wrapperModel, user, category);
 
@@ -106,7 +109,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Model.Uid } });
+            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
             if (task == null) return NotFound();
 
             var json = JsonSerializer.Serialize(wrapperInTask);
@@ -125,7 +128,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Model.Uid } });
+            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
             if (task == null) return NotFound();
 
             var result = await TaskRepository.TaskCompletedAsync(task);
@@ -142,7 +145,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Model.Uid } });
+            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
             if (task == null) return NotFound();
 
             var result = await TaskRepository.DeleteAsync(task);

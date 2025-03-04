@@ -1,6 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
-using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
+using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Http;
@@ -14,11 +15,13 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class SigninController : ControllerBase
     {
-        private readonly UserService UserService;
+        private readonly UserService _userService;
+        private readonly IJwtService _jwtService;
 
-        public SigninController(UserService userService)
+        public SigninController(UserService userService, IJwtService jwtService)
         {
-            this.UserService = userService;
+            _userService = userService;
+            _jwtService = jwtService;
         }
 
         [HttpPost]
@@ -26,12 +29,13 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         {
             if (string.IsNullOrEmpty(wrapperInLogin.Login) || string.IsNullOrEmpty(wrapperInLogin.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
 
-            var remoteUser = await this.UserService.Validade(wrapperInLogin.Login, wrapperInLogin.Password).ConfigureAwait(false);
+            var remoteUser = await this._userService.Validade(wrapperInLogin.Login, wrapperInLogin.Password).ConfigureAwait(false);
             if (remoteUser == null) return new UnauthorizedResult();
 
-            var response = await JwtHelper.JwtResult(remoteUser).ConfigureAwait(false);
+            var userToken = _jwtService.GenerateToken(remoteUser);
 
-            return response;
+            var response = await WrapperOutJwtResult.From(userToken).ConfigureAwait(false);
+            return new OkObjectResult(response);
         }
     }
 }

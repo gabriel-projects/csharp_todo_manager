@@ -1,7 +1,8 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Domain.Models;
-using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
+using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,7 +21,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
         public const string AuthorizationKey = "Authorization";
         public const string AuthorizationQueryKey = "access_token";
 
-        public static async Task<JwtModel> JwtInfo(this HttpContext context, bool validateLifeTime = true)
+        public static Task<IUserModel> JwtInfo(this HttpContext context, bool validateLifeTime = true)
         {
             var user = context.User;
             if (user == null) return null;
@@ -33,12 +34,15 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
 
             try
             {
-                var token = await context.Request.Jwt();
+                var token = context.Request.Jwt();
 
-                var response = await JwtHelper.FromJwt(token, validateLifeTime).ConfigureAwait(false);
+                var jwtService = context.RequestServices.GetService<IJwtService>();
+                if (jwtService == null) return null;
+
+                IUserModel? response = jwtService.FromJwt(token);
                 if (response == null) return null;
 
-                return response;
+                return Task.FromResult(response);
 
             }
             catch (Exception ex)
@@ -48,9 +52,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
             }
         }
 
-        public static async Task<string> Jwt(this HttpRequest request)
+        public static string Jwt(this HttpRequest request)
         {
-            var result = await request.FindKey(AuthorizationKey, AuthorizationQueryKey);
+            var result = request.FindKey(AuthorizationKey, AuthorizationQueryKey);
 
             if (!string.IsNullOrEmpty(result))
             {
@@ -60,7 +64,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
             return result;
         }
 
-        public static Task<string> FindKey(this HttpRequest request, string headerKey, string queryKey)
+        public static string FindKey(this HttpRequest request, string headerKey, string queryKey)
         {
             string result = null;
 
@@ -81,7 +85,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
                 Debug.WriteLine(e);
             }
 
-            return Task.FromResult(result);
+            return result;
         }
     }
 }

@@ -2,6 +2,8 @@
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
+using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
+using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Services;
 using Asp.Versioning;
@@ -34,6 +36,10 @@ namespace Api.GRRInnovations.TodoManager
             var assm = AppDomain.CurrentDomain.GetAssemblies()
                 .Where(p => p.FullName.StartsWith("Api")).ToList();
 
+
+            var jwtSettings = new JwtSettings();
+            Configuration.GetSection("JwtSettings").Bind(jwtSettings);
+
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     .AddJwtBearer(options =>
                     {
@@ -43,9 +49,9 @@ namespace Api.GRRInnovations.TodoManager
                             ValidateAudience = false,
                             ValidateLifetime = true,
                             ValidateIssuerSigningKey = true,
-                            ValidIssuer = JwtHelper.Issuer,
-                            ValidAudience = JwtHelper.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(JwtHelper.Key))
+                            ValidIssuer = jwtSettings.Issuer,
+                            ValidAudience = jwtSettings.Audience,
+                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                         };
                     });
 
@@ -78,6 +84,9 @@ namespace Api.GRRInnovations.TodoManager
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
+
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+            services.AddSingleton<IJwtService, JwtService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

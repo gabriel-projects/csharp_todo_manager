@@ -16,11 +16,11 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService UserService;
+        private readonly UserService _userService;
 
         public UserController(UserService userService)
         {
-            this.UserService = userService;
+            this._userService = userService;
         }
 
         [HttpPost]
@@ -28,12 +28,12 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         {
             if (string.IsNullOrEmpty(wrapperInUser.Login) || string.IsNullOrEmpty(wrapperInUser.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
 
-            var available = await UserService.LoginAvailable(wrapperInUser.Login);
+            var available = await _userService.LoginAvailable(wrapperInUser.Login);
             if (!available) return new BadRequestObjectResult(new WrapperOutError { Title = "Login já registrado." });
 
             var wrapperModel = await wrapperInUser.Result();
 
-            var model = await UserService.Create(wrapperModel).ConfigureAwait(false);
+            var model = await _userService.Create(wrapperModel).ConfigureAwait(false);
             if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
 
             var response = await WrapperOutUser.From(model).ConfigureAwait(false);
@@ -47,7 +47,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var user = await HttpContext.JwtInfo();
             if (user == null) return Unauthorized(); //todo verificar se role é anonymus
 
-            var model = await UserService.Users().ConfigureAwait(false);
+            var model = await _userService.Users().ConfigureAwait(false);
             if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
 
             var response = await WrapperOutUser.From(model).ConfigureAwait(false);

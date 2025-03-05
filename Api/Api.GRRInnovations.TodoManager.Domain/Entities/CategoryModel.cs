@@ -23,5 +23,10 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         {
             DbTasks = new List<TaskModel>();
         }
+
+        public bool CanDelete()
+        {
+            return Tasks.Count == 0;
+        }
     }
 }

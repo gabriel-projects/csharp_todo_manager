@@ -3,21 +3,20 @@ using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
-namespace Api.GRRInnovations.TodoManager.Domain.Entities
+namespace Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication
 {
     public class JwtModel
     {
-        public const string ClaimUserUid = "user_uid";
-        private const string ClaimEmail = "email";
-
         public JwtModel(IUserModel model)
         {
             Model = model;
+            AdditionalClaims = JwtClaimHelper.GenerateClaims(model);
         }
 
         public JwtModel(List<Claim> claims)
         {
             AdditionalClaims = claims ?? new List<Claim>();
+            Model = JwtClaimHelper.ExtractUserFromClaims(claims);
         }
 
         public JwtSecurityToken JwtToken { get; set; }

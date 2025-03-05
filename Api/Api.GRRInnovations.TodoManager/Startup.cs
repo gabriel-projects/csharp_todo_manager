@@ -1,5 +1,4 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Extensions;
-using Api.GRRInnovations.TodoManager.Infrastructure.Authentication;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;

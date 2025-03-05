@@ -51,7 +51,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         }
 
         [HttpGet("tasks")]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult> GetAll()
         {
             var jwtModel = await HttpContext.JwtInfo();

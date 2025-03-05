@@ -1,4 +1,5 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Microsoft.AspNetCore.Http;
@@ -21,12 +22,12 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
         public const string AuthorizationKey = "Authorization";
         public const string AuthorizationQueryKey = "access_token";
 
-        public static Task<IUserModel> JwtInfo(this HttpContext context, bool validateLifeTime = true)
+        public static Task<IUserModel> JwtInfo(this HttpContext context)
         {
             var user = context.User;
             if (user == null) return null;
 
-            var claimIdentifier = user.Claims.FirstOrDefault(c => c.Type == JwtModel.ClaimUserUid)?.Value;
+            var claimIdentifier = user.Claims.FirstOrDefault(c => c.Type == JwtClaimHelper.ClaimUserUid)?.Value;
             if (string.IsNullOrEmpty(claimIdentifier)) return null;
 
             var userUid = Guid.Parse(claimIdentifier);

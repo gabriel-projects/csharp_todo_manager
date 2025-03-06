@@ -9,7 +9,6 @@ using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -63,8 +62,11 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 FilterUsers = new List<Guid> { jwtModel.Uid }
             };
 
-            var tasks = await TaskRepository.GetAllAsync(options);
-            if (tasks == null) return NotFound();
+            var tasks = await this.TaskRepository.GetAllAsync(options);
+            if (tasks == null)
+            {
+                return this.NotFound();
+            }
 
             var response = await WrapperOutTask.From(tasks).ConfigureAwait(false);
             return new OkObjectResult(response);

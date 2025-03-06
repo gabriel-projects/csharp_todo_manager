@@ -37,5 +37,6 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var response = await WrapperOutJwtResult.From(userToken).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
+
     }
 }

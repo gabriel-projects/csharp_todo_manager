@@ -15,6 +15,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoManager.Tests", "Api.GRRInnovations.TodoManager.Tests\Api.GRRInnovations.TodoManager.Tests.csproj", "{FAFA3353-AF54-4BCA-BC58-CC9D7F3E7345}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Api.GRRInnovations.TodoManager.Application", "Api.GRRInnovations.TodoManager.Application\Api.GRRInnovations.TodoManager.Application.csproj", "{7CED9756-F42E-4E60-AA57-ACB62ADE19A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +47,10 @@ Global
 		{FAFA3353-AF54-4BCA-BC58-CC9D7F3E7345}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAFA3353-AF54-4BCA-BC58-CC9D7F3E7345}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAFA3353-AF54-4BCA-BC58-CC9D7F3E7345}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7CED9756-F42E-4E60-AA57-ACB62ADE19A2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7CED9756-F42E-4E60-AA57-ACB62ADE19A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7CED9756-F42E-4E60-AA57-ACB62ADE19A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7CED9756-F42E-4E60-AA57-ACB62ADE19A2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

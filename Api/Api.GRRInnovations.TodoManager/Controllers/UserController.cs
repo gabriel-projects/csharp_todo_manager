@@ -3,7 +3,7 @@ using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using Api.GRRInnovations.TodoManager.Services;
+using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,9 +16,9 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        private readonly UserService _userService;
+        private readonly IUserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(IUserService userService)
         {
             this._userService = userService;
         }
@@ -28,30 +28,30 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         {
             if (string.IsNullOrEmpty(wrapperInUser.Login) || string.IsNullOrEmpty(wrapperInUser.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
 
-            var available = await _userService.LoginAvailable(wrapperInUser.Login);
+            var available = await _userService.LoginExistsAsync(wrapperInUser.Login);
             if (!available) return new BadRequestObjectResult(new WrapperOutError { Title = "Login já registrado." });
 
             var wrapperModel = await wrapperInUser.Result();
 
-            var model = await _userService.Create(wrapperModel).ConfigureAwait(false);
+            var model = await _userService.CreateAsync(wrapperModel).ConfigureAwait(false);
             if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
 
             var response = await WrapperOutUser.From(model).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
 
-        [HttpGet("users")]
-        [Authorize]
-        public async Task<ActionResult> Users()
-        {
-            var user = await HttpContext.JwtInfo();
-            if (user == null) return Unauthorized(); //todo verificar se role é anonymus
+        //[HttpGet("users")]
+        //[Authorize]
+        //public async Task<ActionResult> Users()
+        //{
+        //    var user = await HttpContext.JwtInfo();
+        //    if (user == null) return Unauthorized();
 
-            var model = await _userService.Users().ConfigureAwait(false);
-            if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
+        //    var model = await _userService.Users().ConfigureAwait(false);
+        //    if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
 
-            var response = await WrapperOutUser.From(model).ConfigureAwait(false);
-            return new OkObjectResult(response);
-        }
+        //    var response = await WrapperOutUser.From(model).ConfigureAwait(false);
+        //    return new OkObjectResult(response);
+        //}
     }
 }

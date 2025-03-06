@@ -1,11 +1,12 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Extensions;
+﻿using Api.GRRInnovations.TodoManager.Application.Services;
+using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
-using Api.GRRInnovations.TodoManager.Services;
+using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -80,7 +81,9 @@ namespace Api.GRRInnovations.TodoManager
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
 
-            services.AddScoped<UserService>();
+            services.AddScoped<IUserService, UserService>();
+
+
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();

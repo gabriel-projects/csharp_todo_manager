@@ -20,7 +20,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         }
 
         [HttpGet("signin-google")]
-        public IActionResult Login()
+        public IActionResult LoginGoogle()
         {
             var redirectUrl = Url.Action(nameof(GoogleResponse), "Auth", null, Request.Scheme, Request.Host.Value);
 
@@ -29,6 +29,29 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
         [HttpGet("google-response")]
         public async Task<IActionResult> GoogleResponse()
+        {
+            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+
+            if (!authenticateResult.Succeeded)
+                return BadRequest("Falha ao autenticar com Google.");
+
+            var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims
+                .Select(c => new { c.Type, c.Value });
+
+            return Ok(claims);
+        }
+
+        //todo: ajustar
+        [HttpGet("signin-github")]
+        public IActionResult LoginGitHub()
+        {
+            var redirectUrl = Url.Action(nameof(GoogleResponse), "Auth", null, Request.Scheme, Request.Host.Value);
+
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, GoogleDefaults.AuthenticationScheme);
+        }
+
+        [HttpGet("github-response")]
+        public async Task<IActionResult> GitHubResponse()
         {
             var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 

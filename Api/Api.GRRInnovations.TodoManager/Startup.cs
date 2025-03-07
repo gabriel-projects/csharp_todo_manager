@@ -8,6 +8,8 @@ using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
@@ -56,6 +58,22 @@ namespace Api.GRRInnovations.TodoManager
                         };
                     });
 
+
+            var googleClientId = Configuration["Authentication:Google:ClientId"];
+            var googleSecretId = Configuration["Authentication:Google:ClientSecret"];
+
+            services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddGoogle(googleOptions =>
+            {
+                googleOptions.ClientId = googleClientId;
+                googleOptions.ClientSecret = googleSecretId;
+            });
+
             // learn more about https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore
             services.AddApiVersioning(options =>
             {
@@ -81,7 +99,10 @@ namespace Api.GRRInnovations.TodoManager
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
 
+
+            //todo: move the dependency injections for other static class
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ICryptoService, CryptoService>();
 
 
             services.AddScoped<IUserRepository, UserRepository>();

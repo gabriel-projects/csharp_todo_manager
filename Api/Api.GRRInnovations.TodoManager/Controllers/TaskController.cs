@@ -19,14 +19,14 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     {
         private readonly ITaskRepository TaskRepository;
         private readonly ICategoryRepository CategoryRepository;
-        private readonly IUserRepository UserRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
 
         public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IJwtService jwtService)
         {
             TaskRepository = taskRepository;
             CategoryRepository = categoryRepository;
-            UserRepository = userRepository;
+            _userRepository = userRepository;
             _jwtService = jwtService;
         }
 
@@ -83,7 +83,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var category = await CreateCategoryIfNotExist(wrapperInTask);
 
-            IUserModel user = await UserRepository.GetAsync(jwtModel.Uid);
+            IUserModel user = await _userRepository.GetAsync(jwtModel.Uid);
 
             var task = await TaskRepository.CreatAsync(wrapperModel, user, category);
 

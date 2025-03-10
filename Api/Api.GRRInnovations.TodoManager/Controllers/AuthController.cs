@@ -1,8 +1,8 @@
 ﻿using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
@@ -49,20 +49,21 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, GoogleDefaults.AuthenticationScheme);
         }
-
+        
         [HttpGet("github-response")]
         public async Task<IActionResult> GitHubResponse()
         {
             var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
 
             if (!authenticateResult.Succeeded)
-                return BadRequest("Falha ao autenticar com Google.");
+            {
+                return this.BadRequest("Falha ao autenticar com Google.");
+            }
 
             var claims = authenticateResult.Principal.Identities.FirstOrDefault()?.Claims
                 .Select(c => new { c.Type, c.Value });
 
             return Ok(claims);
         }
-
     }
 }

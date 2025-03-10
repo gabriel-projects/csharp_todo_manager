@@ -45,11 +45,16 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         [HttpGet("signin-github")]
         public IActionResult LoginGitHub()
         {
-            var redirectUrl = Url.Action(nameof(GoogleResponse), "Auth", null, Request.Scheme, Request.Host.Value);
+            var redirectUrl = Url.Action(nameof(GitHubResponse), "Auth", null, Request.Scheme, Request.Host.Value);
+            var redirectUrlV2 = Url.Action("GitHubResponse", "Auth");
 
-            return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, GoogleDefaults.AuthenticationScheme);
+            return Challenge(new AuthenticationProperties { RedirectUri = redirectUrl }, "GitHub");
         }
-        
+
+        /// <summary>
+        ///
+        /// </summary>
+        /// <returns>A <see cref="Task{TResult}"/> representing the result of the asynchronous operation.</returns>
         [HttpGet("github-response")]
         public async Task<IActionResult> GitHubResponse()
         {

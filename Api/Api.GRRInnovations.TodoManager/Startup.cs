@@ -8,9 +8,11 @@ using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -62,6 +64,9 @@ namespace Api.GRRInnovations.TodoManager
             var googleClientId = Configuration["Authentication:Google:ClientId"];
             var googleSecretId = Configuration["Authentication:Google:ClientSecret"];
 
+            var gitHubClientId = Configuration["Authentication:GitHub:ClientId"];
+            var gitHubSecretId = Configuration["Authentication:GitHub:ClientSecret"];
+
             services.AddAuthentication(options =>
             {
                 options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
@@ -72,6 +77,40 @@ namespace Api.GRRInnovations.TodoManager
             {
                 googleOptions.ClientId = googleClientId;
                 googleOptions.ClientSecret = googleSecretId;
+            })
+            .AddOAuth("GitHub", options =>
+            {
+                options.ClientId = gitHubClientId;
+                options.ClientSecret = gitHubSecretId;
+                options.CallbackPath = new PathString("/github-response");
+
+                options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+                options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+                options.UserInformationEndpoint = "https://api.github.com/user";
+
+                options.ClaimActions.MapJsonKey("urn:github:id", "id");
+                options.ClaimActions.MapJsonKey("urn:github:login", "login");
+                options.ClaimActions.MapJsonKey("urn:github:name", "name");
+                options.ClaimActions.MapJsonKey("urn:github:email", "email");
+                options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
+
+                options.SaveTokens = true;
+
+                options.Events = new OAuthEvents
+                {
+                    OnCreatingTicket = async context =>
+                    {
+                        var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
+                        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
+                        request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                        var response = await context.Backchannel.SendAsync(request);
+                        response.EnsureSuccessStatusCode();
+
+                        var user = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                        context.RunClaimActions(user.RootElement);
+                    }
+                };
             });
 
             // learn more about https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore

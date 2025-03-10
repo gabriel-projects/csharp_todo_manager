@@ -5,4 +5,5 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("StyleCop.CSharp.NamingRules", "SA1309:Field names should not begin with underscore", Justification = "not important", Scope = "namespaceanddescendants", Target = "~N:Api.GRRInnovations.TodoManager.Controllers")]
+[assembly: SuppressMessage("StyleCop.CSharp.NamingRules", "SA1309:Field names should not begin with underscore", Justification = "not important", Scope = "namespaceanddescendants", Target = "~N:Api.GRRInnovations.TodoManager")]
+[assembly: SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1413:Use trailing comma in multi-line initializers", Justification = "not important", Scope = "namespaceanddescendants", Target = "~N:Api.GRRInnovations.TodoManager")]

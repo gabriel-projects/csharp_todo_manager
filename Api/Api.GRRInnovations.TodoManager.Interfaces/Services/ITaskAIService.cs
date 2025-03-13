@@ -6,7 +6,8 @@ using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Interfaces.Services
 {
-   public interface ITaskAIService
+    public interface ITaskAIService
     {
+
     }
 }

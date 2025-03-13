@@ -27,7 +27,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         [HttpPost]
         public async Task<ActionResult<WrapperOutJwtResult>> SigninUid([FromBody] WrapperInLogin wrapperInLogin)
         {
-            if (string.IsNullOrEmpty(wrapperInLogin.Login) || string.IsNullOrEmpty(wrapperInLogin.Password)) return new BadRequestObjectResult(new WrapperOutError { Title = "Dados inválidos." });
+            if (string.IsNullOrEmpty(wrapperInLogin.Login) || string.IsNullOrEmpty(wrapperInLogin.Password)) return new BadRequestObjectResult(new WrapperOutError ("Dados inválidos."));
 
             var remoteUser = await _userService.ValidateAsync(wrapperInLogin.Login, wrapperInLogin.Password).ConfigureAwait(false);
             if (remoteUser == null) return new UnauthorizedResult();

@@ -4,6 +4,7 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
+using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
@@ -147,6 +148,7 @@ namespace Api.GRRInnovations.TodoManager
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
+            services.AddScoped<IOpenAIService, OpenAIService>();
 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.AddSingleton<IJwtService, JwtService>();

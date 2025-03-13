@@ -5,9 +5,11 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
 using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Org.BouncyCastle.Asn1.Ocsp;
 using System.Text.Json;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
@@ -21,13 +23,15 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         private readonly ICategoryRepository CategoryRepository;
         private readonly IUserRepository _userRepository;
         private readonly IJwtService _jwtService;
+        private readonly IOpenAIService _openAIService;
 
-        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IJwtService jwtService)
+        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IJwtService jwtService, IOpenAIService openAIService)
         {
             TaskRepository = taskRepository;
             CategoryRepository = categoryRepository;
             _userRepository = userRepository;
             _jwtService = jwtService;
+            _openAIService = openAIService;
         }
 
         [HttpGet("uid/{taskUid}")]
@@ -154,6 +158,22 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             if (result == false) return UnprocessableEntity();
 
             return Ok();
+        }
+
+        [HttpPost("interpret")]
+        public async Task<IActionResult> InterpretTask([FromBody] WrapperInInterpretTask wrapperInInterpretTask)
+        {
+            var (isValid, errorMessage) = wrapperInInterpretTask.Validate();
+            if (!isValid)
+            {
+                return BadRequest(new WrapperOutError(errorMessage));
+            }
+
+            var task = await _openAIService.InterpretTaskAsync(wrapperInInterpretTask.Message, "");
+            if (task == null)
+                return BadRequest("Não foi possível interpretar a mensagem.");
+
+            return Ok(task);
         }
     }
 }

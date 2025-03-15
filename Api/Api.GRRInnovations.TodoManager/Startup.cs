@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
+using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
 
@@ -139,6 +140,17 @@ namespace Api.GRRInnovations.TodoManager
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
 
+
+            var openAISecret = Configuration["Authentication:OpenAI:ClientSecret"];
+
+            services.AddHttpClient("OpenAI", client =>
+            {
+                client.BaseAddress = new Uri("https://api.openai.com/v1/");
+                client.DefaultRequestHeaders.Add("Accept", "application/json");
+            }).ConfigureHttpClient(client =>
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAISecret);
+            });
 
             //todo: move the dependency injections for other static class
             services.AddScoped<IUserService, UserService>();

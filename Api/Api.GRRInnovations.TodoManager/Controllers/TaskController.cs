@@ -39,7 +39,10 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         public async Task<ActionResult> GetTask(Guid taskUid)
         {
             var jwtModel = await HttpContext.JwtInfo();
-            if (jwtModel == null) return Unauthorized();
+            if (jwtModel == null)
+            {
+                return this.Unauthorized();
+            }
 
             var options = new TaskOptions()
             {

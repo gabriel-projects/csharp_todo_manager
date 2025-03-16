@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Api.GRRInnovations.TodoManager.Application;
+using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Infrastructure;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
@@ -37,38 +38,49 @@ namespace Api.GRRInnovations.TodoManager
         {
             services.AddControllers();
 
+            ConfigureSwagger(services);
+            ConfigureSecurity(services);
+            ConfigureInfrastructure(services);
+            ConfigureApplication(services);
+            ConfigureAuthentication(services);
+            ConfigureApiVersioning(services);
+            ConfigureHttpClients(services);
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+
+            //todo:migrate for dependency injection infra
+            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
+            services.AddSingleton<IJwtService, JwtService>();
+        }
+
+        private void ConfigureSwagger(IServiceCollection services)
+        {
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
+        }
 
+        private void ConfigureSecurity(IServiceCollection services)
+        {
             services.AddSecurityServices();
-            services.AddInfrastructureServices(Configuration);
-            services.AddApplicationServices();
+        }
 
+        private void ConfigureInfrastructure(IServiceCollection services)
+        {
+            services.AddInfrastructureServices(Configuration);
+        }
+
+        private void ConfigureApplication(IServiceCollection services)
+        {
+            services.AddApplicationServices();
+        }
+
+        private void ConfigureAuthentication(IServiceCollection services)
+        {
             var jwtSettings = new JwtSettings();
             Configuration.GetSection("JwtSettings").Bind(jwtSettings);
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-                    .AddJwtBearer(options =>
-                    {
-                        options.TokenValidationParameters = new TokenValidationParameters
-                        {
-                            ValidateIssuer = false,
-                            ValidateAudience = false,
-                            ValidateLifetime = true,
-                            ValidateIssuerSigningKey = true,
-                            ValidIssuer = jwtSettings.Issuer,
-                            ValidAudience = jwtSettings.Audience,
-                            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
-                        };
-                    });
-
-
-            var googleClientId = Configuration["Authentication:Google:ClientId"];
-            var googleSecretId = Configuration["Authentication:Google:ClientSecret"];
-
-            var gitHubClientId = Configuration["Authentication:GitHub:ClientId"];
-            var gitHubSecretId = Configuration["Authentication:GitHub:ClientSecret"];
 
             services.AddAuthentication(options =>
             {
@@ -76,57 +88,27 @@ namespace Api.GRRInnovations.TodoManager
                 options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
             })
             .AddCookie()
-            .AddGoogle(googleOptions =>
+            .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
             {
-                googleOptions.ClientId = googleClientId;
-                googleOptions.ClientSecret = googleSecretId;
-            })
-            .AddOAuth("GitHub", options =>
-            {
-                options.ClientId = gitHubClientId;
-                options.ClientSecret = gitHubSecretId;
-                options.CallbackPath = new PathString("/github-response");
-
-                options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
-                options.TokenEndpoint = "https://github.com/login/oauth/access_token";
-                options.UserInformationEndpoint = "https://api.github.com/user";
-
-
-                //todo: ajustar clains
-                options.Scope.Add("user:email");
-
-                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");       
-                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");                 
-                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");            
-                options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
-
-                options.SaveTokens = true;
-
-                options.Events = new OAuthEvents
+                options.TokenValidationParameters = new TokenValidationParameters
                 {
-                    OnCreatingTicket = async context =>
-                    {
-                        var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
-                        request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
-                        request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
-
-                        var email = await GetGitHubEmailAsync(context);
-                        if (!string.IsNullOrEmpty(email))
-                        {
-                            var identity = (ClaimsIdentity)context.Principal.Identity;
-                            identity.AddClaim(new Claim(ClaimTypes.Email, email));
-                        }
-
-                        var response = await context.Backchannel.SendAsync(request);
-                        response.EnsureSuccessStatusCode();
-
-                        var user = System.Text.Json.JsonDocument.Parse(await response.Content.ReadAsStringAsync());
-                        context.RunClaimActions(user.RootElement);
-                    }
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ValidateLifetime = true,
+                    ValidateIssuerSigningKey = true,
+                    ValidIssuer = jwtSettings.Issuer,
+                    ValidAudience = jwtSettings.Audience,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Secret))
                 };
             });
 
+            ConfigureOAuthProviders(services);
+        }
+
+        private void ConfigureApiVersioning(IServiceCollection services)
+        {
             // learn more about https://www.milanjovanovic.tech/blog/api-versioning-in-aspnetcore
+
             services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1);
@@ -140,9 +122,10 @@ namespace Api.GRRInnovations.TodoManager
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
             });
+        }
 
-            services.AddHttpContextAccessor();
-
+        private void ConfigureHttpClients(IServiceCollection services)
+        {
             var openAISecret = Configuration["Authentication:OpenAI:ClientSecret"];
 
             services.AddHttpClient("OpenAI", client =>
@@ -153,14 +136,68 @@ namespace Api.GRRInnovations.TodoManager
             {
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAISecret);
             });
+        }
 
-            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+        private void ConfigureOAuthProviders(IServiceCollection services)
+        {
+            var googleClientId = Configuration["Authentication:Google:ClientId"];
+            var googleSecretId = Configuration["Authentication:Google:ClientSecret"];
 
-            //todo:migrate for dependency injection infra
-            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
-            services.AddSingleton<IJwtService, JwtService>();
+            var gitHubClientId = Configuration["Authentication:GitHub:ClientId"];
+            var gitHubSecretId = Configuration["Authentication:GitHub:ClientSecret"];
 
+            services.AddAuthentication()
+                .AddGoogle(googleOptions =>
+                {
+                    googleOptions.ClientId = googleClientId;
+                    googleOptions.ClientSecret = googleSecretId;
+                })
+                .AddOAuth("GitHub", options =>
+                {
+                    options.ClientId = gitHubClientId;
+                    options.ClientSecret = gitHubSecretId;
+                    options.CallbackPath = new PathString("/github-response");
+
+                    options.AuthorizationEndpoint = "https://github.com/login/oauth/authorize";
+                    options.TokenEndpoint = "https://github.com/login/oauth/access_token";
+                    options.UserInformationEndpoint = "https://api.github.com/user";
+
+                    options.Scope.Add("user:email");
+
+                    options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");
+                    options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");
+                    options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
+
+                    options.SaveTokens = true;
+                    options.Events = new OAuthEvents
+                    {
+                        OnCreatingTicket = async context =>
+                        {
+                            var email = await GetGitHubEmailAsync(context);
+                            if (!string.IsNullOrEmpty(email))
+                            {
+                                var identity = (ClaimsIdentity)context.Principal.Identity;
+                                identity.AddClaim(new Claim(ClaimTypes.Email, email));
+                            }
+
+                            var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint)
+                            {
+                                Headers =
+                                {
+                                    Authorization = new AuthenticationHeaderValue("Bearer", context.AccessToken),
+                                    Accept = { new MediaTypeWithQualityHeaderValue("application/json") }
+                                }
+                            };
+
+                            var response = await context.Backchannel.SendAsync(request);
+                            response.EnsureSuccessStatusCode();
+
+                            var user = JsonDocument.Parse(await response.Content.ReadAsStringAsync());
+                            context.RunClaimActions(user.RootElement);
+                        }
+                    };
+                });
         }
 
         private static async Task<string> GetGitHubEmailAsync(OAuthCreatingTicketContext context)
@@ -204,19 +241,5 @@ namespace Api.GRRInnovations.TodoManager
                 endpoints.MapControllers();
             });
         }
-    }
-
-    public class GitHubEmail
-    {
-        [JsonPropertyName("email")]
-        public string Email { get; set; }
-
-
-        [JsonPropertyName("primary")]
-        public bool Primary { get; set; }
-
-
-        [JsonPropertyName("verified")]
-        public bool Verified { get; set; }
     }
 }

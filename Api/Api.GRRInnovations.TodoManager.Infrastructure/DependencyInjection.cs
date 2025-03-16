@@ -21,8 +21,6 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             
             AddDbContext(services, configuration);
 
-            
-
             return services;
         }
 
@@ -35,6 +33,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             Console.WriteLine($"databaseUrl Startup: {databaseUrl}");
 
             var connection = string.IsNullOrEmpty(databaseUrl) ? connectionString : ConnectionHelper.BuildConnectionString(databaseUrl);
+
+           Console.WriteLine($"connection Startup: {connection}");
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
         }

@@ -9,6 +9,8 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
         Task<IUserModel> GetAsync(Guid uid);
 
         Task<IUserModel> CreateAsync(IUserModel userModel);
+
+        
     }
 
     public class UserOptions
@@ -16,5 +18,9 @@ namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
         public List<Guid> FilterUsers { get; set; }
 
         public List<string> FilterLogins { get; set; }
+
+        public bool IncludeUserTasks {  get; set; }
+
+        public bool IncludeUserDetail {  get; set; }
     }
 }

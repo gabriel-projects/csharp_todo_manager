@@ -33,11 +33,11 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
 
         public Guid TaskRecurrenceUid { get; set; }
 
-        public TaskRecurrence? DbTaskRecurrence { get; set; }
+        public TaskRecurrenceModel? DbTaskRecurrence { get; set; }
         public ITaskRecurrence? TaskRecurrence
         {
             get => DbTaskRecurrence;
-            set => DbTaskRecurrence = value as TaskRecurrence;
+            set => DbTaskRecurrence = value as TaskRecurrenceModel;
         }
     }
 }

@@ -68,6 +68,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
             {
                 var openAIModel = JsonSerializer.Deserialize<OpenAIResponse>(responseString);
 
+                //todo: adjust json
                 var taskData = JsonSerializer.Deserialize<TaskModel>(openAIModel.Choices.FirstOrDefault().Message.Content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
 
                 if (taskData != null)

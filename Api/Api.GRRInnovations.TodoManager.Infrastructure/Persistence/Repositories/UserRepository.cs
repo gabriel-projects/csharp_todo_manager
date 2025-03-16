@@ -19,18 +19,6 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
         {
             if (userModel is not UserModel model) return null;
 
-            if (model.Password == null) model.Password = Guid.NewGuid().ToString();
-
-            model.Password = ConvertPassword(model.Password);
-
-            if (model.UserDetail != null && string.IsNullOrEmpty(model.UserDetail?.Name))
-            {
-                var firsName = model.UserDetail?.FirstName ?? "";
-                var lastName = model.UserDetail?.LastName ?? "";
-
-                model.UserDetail.Name = $"{firsName} {lastName}";
-            }
-
             await Context.Users.AddAsync(model).ConfigureAwait(false);
             await Context.SaveChangesAsync().ConfigureAwait(false);
 
@@ -42,15 +30,6 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return await Query(userOptions).ToListAsync<IUserModel>();
         }
 
-        private IQueryable<UserModel> Query(UserOptions options)
-        {
-            var query = Context.Users.AsQueryable();
-
-            if (options.FilterLogins != null) query = query.Where(p => options.FilterLogins.Contains(p.Login));
-            if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
-
-            return query;
-        }
         //todo: organizar por regions
         private string ConvertPassword(string password)
         {
@@ -68,5 +47,18 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             return await Context.Users.FirstOrDefaultAsync(x => x.Uid == uid);
         }
+        private IQueryable<UserModel> Query(UserOptions options)
+        {
+            var query = Context.Users.AsQueryable();
+
+            if (options.FilterLogins != null) query = query.Where(p => options.FilterLogins.Contains(p.Login));
+            if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
+            if (options.IncludeUserDetail) query = query.Include(p => p.DbUserDetail);
+
+            return query;
+        }
+
+
+
     }
 }

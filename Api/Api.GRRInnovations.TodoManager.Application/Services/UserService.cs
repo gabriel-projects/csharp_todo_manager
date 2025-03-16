@@ -5,6 +5,8 @@ using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Api.GRRInnovations.TodoManager.Security.Crypto;
+using Microsoft.Extensions.Options;
+using System.Security.Claims;
 
 namespace Api.GRRInnovations.TodoManager.Application.Services
 {
@@ -50,6 +52,14 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
             if (string.IsNullOrEmpty(userModel.Password))
                 userModel.Password = Guid.NewGuid().ToString();
 
+            if (userModel.UserDetail != null && string.IsNullOrEmpty(userModel.UserDetail?.Name))
+            {
+                var firsName = userModel.UserDetail?.FirstName ?? "";
+                var lastName = userModel.UserDetail?.LastName ?? "";
+
+                userModel.UserDetail.Name = $"{firsName} {lastName}";
+            }
+
             userModel.Password = _cryptoService.HashPassword(userModel.Password);
 
             return await _userRepository.CreateAsync(userModel);
@@ -73,6 +83,32 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
             }
 
             return remoteUser;
+        }
+
+        public async Task<List<IUserModel>> GetAllAsync(UserOptions userOptions)
+        {
+            return await _userRepository.UsersAsync(userOptions);
+        }
+
+        public async Task<IUserModel> CreateUserModelFromClains(IUserClaimsModel claims)
+        {
+            if (claims == null) return null;
+
+            var newUser = new UserModel
+            {
+                Login = claims.Email,
+                BlockedAccess = false,
+                PendingConfirm = false,
+                UserDetail = new UserDetailModel
+                {
+                    Name = $"{claims.FirstName} {claims.LastName}",
+                    Email = claims.Email,
+                    FirstName = claims.FirstName,
+                    LastName = claims.LastName
+                },
+            };
+
+            return newUser;
         }
     }
 }

@@ -12,7 +12,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
         internal DbSet<UserDetailModel> UsersDetails { get; set; }
         internal DbSet<TaskModel> Tasks { get; set; }
         internal DbSet<CategoryModel> Categories { get; set; }
-        internal DbSet<TaskRecurrence> TasksRecurrences { get; set; }
+        internal DbSet<TaskRecurrenceModel> TasksRecurrences { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         { }
@@ -45,9 +45,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence
             modelBuilder.Entity<CategoryModel>().Ignore(m => m.Tasks);
             modelBuilder.Entity<CategoryModel>().HasMany(m => m.DbTasks).WithOne(m => m.DbCategory).HasForeignKey(p => p.CategoryUid).OnDelete(DeleteBehavior.NoAction);
 
-            DefaultModelSetup<TaskRecurrence>(modelBuilder);
-            modelBuilder.Entity<TaskRecurrence>().Ignore(m => m.Task);
-            modelBuilder.Entity<TaskRecurrence>().HasOne(m => m.DbTask).WithOne(m => m.DbTaskRecurrence).HasForeignKey<TaskRecurrence>(p => p.TaskUid).OnDelete(DeleteBehavior.NoAction);
+            DefaultModelSetup<TaskRecurrenceModel>(modelBuilder);
+            modelBuilder.Entity<TaskRecurrenceModel>().Ignore(m => m.Task);
+            modelBuilder.Entity<TaskRecurrenceModel>().HasOne(m => m.DbTask).WithOne(m => m.DbTaskRecurrence).HasForeignKey<TaskRecurrenceModel>(p => p.TaskUid).OnDelete(DeleteBehavior.NoAction);
         }
 
         public override int SaveChanges()

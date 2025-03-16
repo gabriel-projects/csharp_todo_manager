@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Entities
 {
-    public class TaskRecurrence : BaseModel, ITaskRecurrence
+    public class TaskRecurrenceModel : BaseModel, ITaskRecurrence
     {
         public EDayOfWeek? DayOfWeek { get; set; }
         public RecurrenceType RecurrenceType { get; set; }

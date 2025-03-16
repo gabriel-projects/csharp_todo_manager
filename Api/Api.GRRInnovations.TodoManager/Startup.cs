@@ -15,12 +15,21 @@ using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Http.Headers;
 using System.Reflection;
 using System.Text;
+using Api.GRRInnovations.TodoManager.Application.Interfaces;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
+using System.Security.Claims;
+using System.Text.Json;
+using Org.BouncyCastle.Asn1.Ocsp;
+using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager
 {
@@ -90,10 +99,13 @@ namespace Api.GRRInnovations.TodoManager
                 options.TokenEndpoint = "https://github.com/login/oauth/access_token";
                 options.UserInformationEndpoint = "https://api.github.com/user";
 
-                options.ClaimActions.MapJsonKey("urn:github:id", "id");
-                options.ClaimActions.MapJsonKey("urn:github:login", "login");
-                options.ClaimActions.MapJsonKey("urn:github:name", "name");
-                options.ClaimActions.MapJsonKey("urn:github:email", "email");
+
+                //todo: ajustar clains
+                options.Scope.Add("user:email");
+
+                options.ClaimActions.MapJsonKey(ClaimTypes.NameIdentifier, "id");       
+                options.ClaimActions.MapJsonKey(ClaimTypes.Name, "name");                 
+                options.ClaimActions.MapJsonKey(ClaimTypes.Email, "email");            
                 options.ClaimActions.MapJsonKey("urn:github:avatar", "avatar_url");
 
                 options.SaveTokens = true;
@@ -105,6 +117,13 @@ namespace Api.GRRInnovations.TodoManager
                         var request = new HttpRequestMessage(HttpMethod.Get, context.Options.UserInformationEndpoint);
                         request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
                         request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+                        var email = await GetGitHubEmailAsync(context);
+                        if (!string.IsNullOrEmpty(email))
+                        {
+                            var identity = (ClaimsIdentity)context.Principal.Identity;
+                            identity.AddClaim(new Claim(ClaimTypes.Email, email));
+                        }
 
                         var response = await context.Backchannel.SendAsync(request);
                         response.EnsureSuccessStatusCode();
@@ -139,7 +158,7 @@ namespace Api.GRRInnovations.TodoManager
             var connection = string.IsNullOrEmpty(databaseUrl) ? connectionString : ConnectionHelper.BuildConnectionString(databaseUrl);
 
             services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
-
+            services.AddHttpContextAccessor();
 
             var openAISecret = Configuration["Authentication:OpenAI:ClientSecret"];
 
@@ -152,8 +171,13 @@ namespace Api.GRRInnovations.TodoManager
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", openAISecret);
             });
 
+            services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+            services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
+
             //todo: move the dependency injections for other static class
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthManager, AuthManager>();
+            services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<ICryptoService, CryptoService>();
 
 
@@ -164,6 +188,21 @@ namespace Api.GRRInnovations.TodoManager
 
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.AddSingleton<IJwtService, JwtService>();
+        }
+
+        public async Task<string> GetGitHubEmailAsync(OAuthCreatingTicketContext context)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, "https://api.github.com/user/emails");
+            request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);
+            request.Headers.Accept.Add(new System.Net.Http.Headers.MediaTypeWithQualityHeaderValue("application/json"));
+
+            var response = await context.Backchannel.SendAsync(request);
+            response.EnsureSuccessStatusCode();
+
+            var json = await response.Content.ReadAsStringAsync();
+            var emails = JsonSerializer.Deserialize<List<GitHubEmail>>(json);
+
+            return emails?.FirstOrDefault(e => e.Primary && e.Verified)?.Email;
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -192,5 +231,19 @@ namespace Api.GRRInnovations.TodoManager
                 endpoints.MapControllers();
             });
         }
+    }
+
+    public class GitHubEmail
+    {
+        [JsonPropertyName("email")]
+        public string Email { get; set; }
+
+
+        [JsonPropertyName("primary")]
+        public bool Primary { get; set; }
+
+
+        [JsonPropertyName("verified")]
+        public bool Verified { get; set; }
     }
 }

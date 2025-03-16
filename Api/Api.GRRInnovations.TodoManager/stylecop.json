@@ -20,6 +20,7 @@
     "orderingRules": {
       "usingDirectivesPlacement": "outsideNamespace",
       "systemUsingDirectivesFirst": true
-    }
+    },
+
   }
 }

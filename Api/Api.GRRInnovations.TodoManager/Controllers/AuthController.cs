@@ -1,5 +1,5 @@
-﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
-using Api.GRRInnovations.TodoManager.Application.Services;
+﻿using System.Security.Claims;
+using Api.GRRInnovations.TodoManager.Application.Interfaces;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
@@ -10,10 +10,7 @@ using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.IdentityModel.Tokens;
-using System.Security.Claims;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -23,14 +20,12 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     public class AuthController : ControllerBase
     {
         private readonly IJwtService _jwtService;
-        private readonly ILogger<AuthController> _logger;
         private readonly IAuthManager _authManager;
         private readonly IUserService _userService;
 
         public AuthController(IJwtService jwtService, ILogger<AuthController> logger, IAuthManager authManager, IUserService userService)
         {
             _jwtService = jwtService;
-            _logger = logger;
             _authManager = authManager;
             _userService = userService;
         }

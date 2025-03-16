@@ -1,12 +1,8 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Attributes;
-using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
+﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
-using Api.GRRInnovations.TodoManager.Security.Crypto;
-using Microsoft.Extensions.Options;
-using System.Security.Claims;
+using Api.GRRInnovations.TodoManager.Security.Interfaces;
 
 namespace Api.GRRInnovations.TodoManager.Application.Services
 {
@@ -33,16 +29,16 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
             return users.Count == 0;
         }
 
-        private async Task<bool> CorrectPassword(string remotePassword, string localPassword)
+        private Task<bool> CorrectPassword(string localPassword, string remotePassword)
         {
-            if (remotePassword == null) return false;
+            if (remotePassword == null) return Task.FromResult(false);
 
-            var passwordV1 = SHA1.Hash(remotePassword);
+            var passwordV1 = _cryptoService.HashPassword(remotePassword);
 
-            if (localPassword == passwordV1) return true;
-            if (!_cryptoService.VerifyPassword(remotePassword, localPassword)) return true;
+            if (localPassword == passwordV1) return Task.FromResult(true);
+            if (!_cryptoService.VerifyPassword(passwordV1, localPassword)) return Task.FromResult(true);
 
-            return false;
+            return Task.FromResult(false);
         }
 
         public async Task<IUserModel> CreateAsync(IUserModel userModel)
@@ -77,9 +73,8 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
 
             if (remoteUser != null)
             {
-                //todo: criar ex personalizadas para lançar ex
-                //if (remoteUser.BlockedAccess) return new BadRequestObjectResult(new WrapperOutError { Message = "Acesso bloqueado." });
-                //if (remoteUser.PendingConfirm) return new BadRequestObjectResult(new WrapperOutError { Message = "Confirmação da conta pendente." });
+                if (remoteUser.BlockedAccess) throw new Exception("Acesso bloqueado.");
+                if (remoteUser.PendingConfirm) throw new Exception("Confirmação da conta pendente.");
             }
 
             return remoteUser;

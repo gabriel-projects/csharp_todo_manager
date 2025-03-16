@@ -1,6 +1,6 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Services;
+﻿using Api.GRRInnovations.TodoManager.Security.Interfaces;
 
-namespace Api.GRRInnovations.TodoManager.Application.Services
+namespace Api.GRRInnovations.TodoManager.Security.Services
 {
     public class CryptoService : ICryptoService
     {

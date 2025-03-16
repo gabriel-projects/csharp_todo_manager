@@ -1,5 +1,10 @@
-﻿using Api.GRRInnovations.TodoManager.Application.Services;
-using Api.GRRInnovations.TodoManager.Domain.Extensions;
+﻿using System.Net.Http.Headers;
+using System.Security.Claims;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using Api.GRRInnovations.TodoManager.Application.Interfaces;
+using Api.GRRInnovations.TodoManager.Application.Services;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
@@ -8,28 +13,18 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
 using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
 using Api.GRRInnovations.TodoManager.Interfaces.Services;
+using Api.GRRInnovations.TodoManager.Security.Interfaces;
+using Api.GRRInnovations.TodoManager.Security.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
-using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.Abstractions;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
-using System.Net.Http.Headers;
-using System.Reflection;
-using System.Text;
-using Api.GRRInnovations.TodoManager.Application.Interfaces;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using System.Security.Claims;
-using System.Text.Json;
-using Org.BouncyCastle.Asn1.Ocsp;
-using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc.Routing;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 namespace Api.GRRInnovations.TodoManager
 {

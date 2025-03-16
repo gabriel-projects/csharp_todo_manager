@@ -9,7 +9,6 @@ using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Org.BouncyCastle.Asn1.Ocsp;
 using System.Text.Json;
 
 namespace Api.GRRInnovations.TodoManager.Controllers

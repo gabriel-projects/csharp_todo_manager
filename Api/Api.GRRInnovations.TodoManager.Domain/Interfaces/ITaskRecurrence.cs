@@ -1,7 +1,7 @@
 ﻿
-using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
+using Api.GRRInnovations.TodoManager.Domain.Enuns;
 
-namespace Api.GRRInnovations.TodoManager.Interfaces.Models
+namespace Api.GRRInnovations.TodoManager.Domain.Models
 {
     public interface ITaskRecurrence : IBaseModel
     {

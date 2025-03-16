@@ -1,11 +1,11 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
+using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

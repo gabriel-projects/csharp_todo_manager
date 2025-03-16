@@ -1,4 +1,4 @@
-﻿namespace Api.GRRInnovations.TodoManager.Interfaces.Services
+﻿namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
 {
     public interface IOpenAIService
     {

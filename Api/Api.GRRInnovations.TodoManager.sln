@@ -9,8 +9,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoMana
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoManager.Infrastructure", "Api.GRRInnovations.TodoManager.Infrastructure\Api.GRRInnovations.TodoManager.Infrastructure.csproj", "{3490F7F6-BA36-4E07-A79B-F759C5BE0409}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoManager.Interfaces", "Api.GRRInnovations.TodoManager.Interfaces\Api.GRRInnovations.TodoManager.Interfaces.csproj", "{2D21A410-3DD5-4FB3-8F61-0536F50DA20F}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoManager.Security", "Api.GRRInnovations.TodoManager.Security\Api.GRRInnovations.TodoManager.Security.csproj", "{DADA872F-7EA9-4A01-B01B-0988377E9B88}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Api.GRRInnovations.TodoManager.Tests", "Api.GRRInnovations.TodoManager.Tests\Api.GRRInnovations.TodoManager.Tests.csproj", "{FAFA3353-AF54-4BCA-BC58-CC9D7F3E7345}"
@@ -35,10 +33,6 @@ Global
 		{3490F7F6-BA36-4E07-A79B-F759C5BE0409}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3490F7F6-BA36-4E07-A79B-F759C5BE0409}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3490F7F6-BA36-4E07-A79B-F759C5BE0409}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2D21A410-3DD5-4FB3-8F61-0536F50DA20F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2D21A410-3DD5-4FB3-8F61-0536F50DA20F}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2D21A410-3DD5-4FB3-8F61-0536F50DA20F}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2D21A410-3DD5-4FB3-8F61-0536F50DA20F}.Release|Any CPU.Build.0 = Release|Any CPU
 		{DADA872F-7EA9-4A01-B01B-0988377E9B88}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{DADA872F-7EA9-4A01-B01B-0988377E9B88}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DADA872F-7EA9-4A01-B01B-0988377E9B88}.Release|Any CPU.ActiveCfg = Release|Any CPU

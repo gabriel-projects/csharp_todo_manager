@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.GRRInnovations.TodoManager.Interfaces.Models
+namespace Api.GRRInnovations.TodoManager.Domain.Models
 {
     public interface IUserClaimsModel
     {

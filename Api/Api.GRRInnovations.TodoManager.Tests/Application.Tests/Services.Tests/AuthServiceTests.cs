@@ -1,6 +1,4 @@
 ﻿using Api.GRRInnovations.TodoManager.Application.Services;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;

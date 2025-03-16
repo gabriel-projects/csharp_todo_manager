@@ -1,13 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 {

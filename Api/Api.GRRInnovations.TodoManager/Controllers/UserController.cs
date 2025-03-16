@@ -1,9 +1,9 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
+using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

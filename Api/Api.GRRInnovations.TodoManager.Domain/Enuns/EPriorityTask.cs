@@ -1,4 +1,4 @@
-﻿namespace Api.GRRInnovations.TodoManager.Interfaces.Enuns
+﻿namespace Api.GRRInnovations.TodoManager.Domain.Enuns
 {
     public enum EPriorityTask
     {

@@ -1,8 +1,8 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+﻿using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Domain.ValueObjects;
 using System.Security.Claims;
 
-namespace Api.GRRInnovations.TodoManager.Interfaces.Services
+namespace Api.GRRInnovations.TodoManager.Application.Interfaces
 {
     public interface IUserService
     {

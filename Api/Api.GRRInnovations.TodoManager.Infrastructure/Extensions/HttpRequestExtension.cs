@@ -1,7 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using System;

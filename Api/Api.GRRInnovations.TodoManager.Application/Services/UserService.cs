@@ -1,7 +1,8 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
+﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
+using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Domain.ValueObjects;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Api.GRRInnovations.TodoManager.Security.Interfaces;
 
 namespace Api.GRRInnovations.TodoManager.Application.Services
@@ -17,14 +18,13 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
             _cryptoService = cryptoService;
         }
 
-        public async Task<List<IUserModel>> Users()
-        {
-            return await _userRepository.UsersAsync(new UserOptions());
-        }
-
         public async Task<bool> LoginExistsAsync(string login)
         {
-            var users = await _userRepository.UsersAsync(new UserOptions { FilterLogins = new List<string> { login } });
+            var options = UserOptions.Create()
+                .WithLogins(new List<string> { login })
+                .Build();
+
+            var users = await _userRepository.UsersAsync(options);
 
             return users.Count == 0;
         }
@@ -63,7 +63,11 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
 
         public async Task<IUserModel> ValidateAsync(string login, string password)
         {
-            var users = await _userRepository.UsersAsync(new UserOptions { FilterLogins = new List<string> { login } });
+            var options = UserOptions.Create()
+                .WithLogins(new List<string> { login })
+                .Build();
+
+            var users = await _userRepository.UsersAsync(options);
 
             var remoteUser = users.FirstOrDefault();
             if (remoteUser != null && !await CorrectPassword(password, remoteUser.Password))

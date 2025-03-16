@@ -1,4 +1,4 @@
-﻿namespace Api.GRRInnovations.TodoManager.Interfaces.Authentication
+﻿namespace Api.GRRInnovations.TodoManager.Infrastructure.Interfaces
 {
     public interface IJwtResultModel
     {

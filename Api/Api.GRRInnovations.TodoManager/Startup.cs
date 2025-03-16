@@ -3,18 +3,13 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using Api.GRRInnovations.TodoManager.Application.Interfaces;
-using Api.GRRInnovations.TodoManager.Application.Services;
+using Api.GRRInnovations.TodoManager.Application;
+using Api.GRRInnovations.TodoManager.Domain.Extensions;
+using Api.GRRInnovations.TodoManager.Infrastructure;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
-using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
-using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
-using Api.GRRInnovations.TodoManager.Infrastructure.Services;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
-using Api.GRRInnovations.TodoManager.Security.Interfaces;
-using Api.GRRInnovations.TodoManager.Security.Services;
+using Api.GRRInnovations.TodoManager.Security;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -24,6 +19,7 @@ using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Api.GRRInnovations.TodoManager
@@ -40,13 +36,14 @@ namespace Api.GRRInnovations.TodoManager
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
 
-            var assm = AppDomain.CurrentDomain.GetAssemblies()
-                .Where(p => p.FullName.StartsWith("Api")).ToList();
-
+            services.AddSecurityServices();
+            services.AddInfrastructureServices(Configuration);
+            services.AddApplicationServices();
 
             var jwtSettings = new JwtSettings();
             Configuration.GetSection("JwtSettings").Bind(jwtSettings);
@@ -144,15 +141,6 @@ namespace Api.GRRInnovations.TodoManager
                 options.SubstituteApiVersionInUrl = true;
             });
 
-            var connectionString = Configuration.GetConnectionString("SqlConnectionString");
-            var databaseUrl = Environment.GetEnvironmentVariable("DATABASE_URL");
-
-            Console.WriteLine($"sqlConnection Startup: {connectionString}");
-            Console.WriteLine($"databaseUrl Startup: {databaseUrl}");
-
-            var connection = string.IsNullOrEmpty(databaseUrl) ? connectionString : ConnectionHelper.BuildConnectionString(databaseUrl);
-
-            services.AddDbContext<ApplicationDbContext>(options => options.UseNpgsql(connection));
             services.AddHttpContextAccessor();
 
             var openAISecret = Configuration["Authentication:OpenAI:ClientSecret"];
@@ -169,23 +157,13 @@ namespace Api.GRRInnovations.TodoManager
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
 
-            //todo: move the dependency injections for other static class
-            services.AddScoped<IUserService, UserService>();
-            services.AddScoped<IAuthManager, AuthManager>();
-            services.AddScoped<IAuthService, AuthService>();
-            services.AddScoped<ICryptoService, CryptoService>();
-
-
-            services.AddScoped<IUserRepository, UserRepository>();
-            services.AddScoped<ICategoryRepository, CategoryRepository>();
-            services.AddScoped<ITaskRepository, TaskRepository>();
-            services.AddScoped<IOpenAIService, OpenAIService>();
-
+            //todo:migrate for dependency injection infra
             services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
             services.AddSingleton<IJwtService, JwtService>();
+
         }
 
-        public async Task<string> GetGitHubEmailAsync(OAuthCreatingTicketContext context)
+        private static async Task<string> GetGitHubEmailAsync(OAuthCreatingTicketContext context)
         {
             var request = new HttpRequestMessage(HttpMethod.Get, "https://api.github.com/user/emails");
             request.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", context.AccessToken);

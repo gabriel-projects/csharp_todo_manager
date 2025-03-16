@@ -1,9 +1,4 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication
 {

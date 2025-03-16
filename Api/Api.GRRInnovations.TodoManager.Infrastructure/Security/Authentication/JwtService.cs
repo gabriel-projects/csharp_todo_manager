@@ -1,7 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Extensions;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using System.IdentityModel.Tokens.Jwt;

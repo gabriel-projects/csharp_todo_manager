@@ -1,4 +1,4 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Models;
 using Newtonsoft.Json;
 using System.Collections.Generic;
 using System.Data;

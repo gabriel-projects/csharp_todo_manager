@@ -1,5 +1,5 @@
 ﻿
-namespace Api.GRRInnovations.TodoManager.Interfaces.Models
+namespace Api.GRRInnovations.TodoManager.Domain.Models
 {
     public interface ICategoryModel : IBaseModel
     {

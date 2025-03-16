@@ -1,5 +1,5 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using System.Security.Claims;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication

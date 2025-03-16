@@ -1,4 +1,4 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Models;
 using System.Text.Json.Serialization;
 
 namespace Api.GRRInnovations.TodoManager.Domain.Wrappers.In

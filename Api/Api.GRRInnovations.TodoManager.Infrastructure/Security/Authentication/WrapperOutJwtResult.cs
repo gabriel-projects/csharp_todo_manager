@@ -1,9 +1,9 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Wrappers;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication
 {

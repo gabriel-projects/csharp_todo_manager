@@ -1,11 +1,11 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.GRRInnovations.TodoManager.Interfaces.Repositories
+namespace Api.GRRInnovations.TodoManager.Infrastructure.Repositories
 {
     public interface ICategoryRepository
     {

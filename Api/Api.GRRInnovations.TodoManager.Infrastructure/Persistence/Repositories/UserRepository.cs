@@ -1,7 +1,8 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Attributes;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Domain.ValueObjects;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories

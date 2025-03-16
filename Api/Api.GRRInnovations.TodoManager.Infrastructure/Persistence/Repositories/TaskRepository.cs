@@ -1,7 +1,6 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Repositories;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -9,6 +8,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
+using Api.GRRInnovations.TodoManager.Domain.Enuns;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 {
@@ -65,7 +66,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             var data = model as TaskModel;
             if (data == null) return null;
 
-            data.Status = Interfaces.Enuns.EStatusTask.Completed;
+            data.Status = EStatusTask.Completed;
 
             Context.Tasks.Update(data);
             await Context.SaveChangesAsync();

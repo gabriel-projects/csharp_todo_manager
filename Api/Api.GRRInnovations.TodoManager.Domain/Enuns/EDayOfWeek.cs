@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Api.GRRInnovations.TodoManager.Interfaces.Enuns
+namespace Api.GRRInnovations.TodoManager.Domain.Enuns
 {
     [Flags]
     public enum EDayOfWeek

@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Api.GRRInnovations.TodoManager.Domain\Api.GRRInnovations.TodoManager.Domain.csproj" />
-    <ProjectReference Include="..\Api.GRRInnovations.TodoManager.Interfaces\Api.GRRInnovations.TodoManager.Interfaces.csproj" />
+    <ProjectReference Include="..\Api.GRRInnovations.TodoManager.Infrastructure\Api.GRRInnovations.TodoManager.Infrastructure.csproj" />
     <ProjectReference Include="..\Api.GRRInnovations.TodoManager.Security\Api.GRRInnovations.TodoManager.Security.csproj" />
   </ItemGroup>
 

@@ -1,12 +1,12 @@
 ﻿using System.Security.Claims;
 using Api.GRRInnovations.TodoManager.Application.Interfaces;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
+using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Domain.ValueObjects;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Authentication;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
-using Api.GRRInnovations.TodoManager.Interfaces.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -51,7 +51,11 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 return BadRequest("Email não encontrado.");
             }
 
-            var existingUser = await _userService.GetAllAsync(new Interfaces.Repositories.UserOptions { FilterLogins = new List<string> { userClaims.Email } });
+            var options = UserOptions.Create()
+                .WithLogins(new List<string> { userClaims.Email })
+                .Build();
+
+            var existingUser = await _userService.GetAllAsync(options);
             if (existingUser != null && existingUser.Any())
             {
                 return await GenerateTokenResponse(existingUser.FirstOrDefault() as UserModel).ConfigureAwait(false);
@@ -89,7 +93,11 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 return BadRequest("Email não encontrado.");
             }
 
-            var existingUser = await _userService.GetAllAsync(new Interfaces.Repositories.UserOptions { FilterLogins = new List<string> { userClaims.Email } });
+            var options = UserOptions.Create()
+                .WithLogins(new List<string> { userClaims.Email })
+                .Build();
+
+            var existingUser = await _userService.GetAllAsync(options);
             if (existingUser != null && existingUser.Any())
             {
                 return await GenerateTokenResponse(existingUser.FirstOrDefault() as UserModel).ConfigureAwait(false);

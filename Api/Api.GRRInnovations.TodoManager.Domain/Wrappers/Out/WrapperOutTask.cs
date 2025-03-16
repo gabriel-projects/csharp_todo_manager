@@ -1,5 +1,5 @@
-﻿using Api.GRRInnovations.TodoManager.Interfaces.Enuns;
-using Api.GRRInnovations.TodoManager.Interfaces.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Enuns;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using Newtonsoft.Json;
 using System.Text.Json.Serialization;
 

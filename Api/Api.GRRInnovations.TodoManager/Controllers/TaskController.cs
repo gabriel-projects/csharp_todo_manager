@@ -40,7 +40,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null)
             {
-                return this.Unauthorized();
+                return Unauthorized();
             }
 
             var options = new TaskOptions()
@@ -68,10 +68,10 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 FilterUsers = new List<Guid> { jwtModel.Uid }
             };
 
-            var tasks = await this.TaskRepository.GetAllAsync(options);
+            var tasks = await TaskRepository.GetAllAsync(options);
             if (tasks == null)
             {
-                return this.NotFound();
+                return NotFound();
             }
 
             var response = await WrapperOutTask.From(tasks).ConfigureAwait(false);

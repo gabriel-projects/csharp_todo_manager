@@ -21,6 +21,10 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             
             AddDbContext(services, configuration);
 
+            //todo:migrate for dependency injection infra
+            
+            services.AddSingleton<IJwtService, JwtService>();
+
             return services;
         }
 

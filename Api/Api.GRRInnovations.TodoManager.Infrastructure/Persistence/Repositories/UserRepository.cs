@@ -52,14 +52,11 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
         {
             var query = Context.Users.AsQueryable();
 
-            if (options.FilterLogins != null) query = query.Where(p => options.FilterLogins.Contains(p.Login));
-            if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
+            if (options.FilterLogins.Any()) query = query.Where(p => options.FilterLogins.Contains(p.Login));
+            if (options.FilterUsers.Any()) query = query.Where(p => options.FilterUsers.Contains(p.Uid));
             if (options.IncludeUserDetail) query = query.Include(p => p.DbUserDetail);
 
             return query;
         }
-
-
-
     }
 }

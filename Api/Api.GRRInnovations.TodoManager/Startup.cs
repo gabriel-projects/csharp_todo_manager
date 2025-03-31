@@ -49,10 +49,6 @@ namespace Api.GRRInnovations.TodoManager
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
-
-            //todo:migrate for dependency injection infra
-            services.Configure<JwtSettings>(Configuration.GetSection("JwtSettings"));
-            services.AddSingleton<IJwtService, JwtService>();
         }
 
         private void ConfigureSwagger(IServiceCollection services)
@@ -79,8 +75,12 @@ namespace Api.GRRInnovations.TodoManager
 
         private void ConfigureAuthentication(IServiceCollection services)
         {
+
+            var jwtSection = Configuration.GetSection("JwtSettings");
+            services.Configure<JwtSettings>(jwtSection);
+
             var jwtSettings = new JwtSettings();
-            Configuration.GetSection("JwtSettings").Bind(jwtSettings);
+            jwtSection.Bind(jwtSettings);
 
             services.AddAuthentication(options =>
             {

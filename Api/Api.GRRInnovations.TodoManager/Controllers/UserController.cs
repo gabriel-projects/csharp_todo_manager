@@ -39,19 +39,5 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var response = await WrapperOutUser.From(model).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
-
-        //[HttpGet("users")]
-        //[Authorize]
-        //public async Task<ActionResult> Users()
-        //{
-        //    var user = await HttpContext.JwtInfo();
-        //    if (user == null) return Unauthorized();
-
-        //    var model = await _userService.Users().ConfigureAwait(false);
-        //    if (model == null) return new BadRequestObjectResult(new WrapperOutError { Title = "Falha ao criar usuário." });
-
-        //    var response = await WrapperOutUser.From(model).ConfigureAwait(false);
-        //    return new OkObjectResult(response);
-        //}
     }
 }

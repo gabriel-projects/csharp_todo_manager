@@ -56,22 +56,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return await Query(options).ToListAsync<ITaskModel>();
         }
 
-        public async Task<ITaskModel> GetAsync(Guid id, TaskOptions options)
+        public async Task<ITaskModel> GetAsync(Guid id)
         {
-            return await Query(options).FirstOrDefaultAsync(x => x.Uid == id);
-        }
-
-        public async Task<ITaskModel> TaskCompletedAsync(ITaskModel model)
-        {
-            var data = model as TaskModel;
-            if (data == null) return null;
-
-            data.Status = EStatusTask.Completed;
-
-            Context.Tasks.Update(data);
-            await Context.SaveChangesAsync();
-
-            return data;
+            return await Context.Tasks.FirstOrDefaultAsync(x => x.Uid == id);
         }
 
         public async Task<ITaskModel> UpdateAsync(string json, ITaskModel model)
@@ -91,6 +78,16 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return data;
         }
 
+        public async Task<ITaskModel> UpdateAsync(ITaskModel model)
+        {
+            var data = model as TaskModel;
+            if (data == null) return null;
+
+            Context.Tasks.Update(data);
+            await Context.SaveChangesAsync();
+
+            return data;
+        }
 
         #region querys
         private IQueryable<TaskModel> Query(TaskOptions options)

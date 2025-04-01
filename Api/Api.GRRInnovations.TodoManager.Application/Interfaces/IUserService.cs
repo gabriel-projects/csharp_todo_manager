@@ -15,5 +15,7 @@ namespace Api.GRRInnovations.TodoManager.Application.Interfaces
         Task<List<IUserModel>> GetAllAsync(UserOptions userOptions);
 
         Task<IUserModel> CreateUserModelFromClains(IUserClaimsModel claims);
+
+        Task<IUserModel> GetAsync(Guid uid);
     }
 }

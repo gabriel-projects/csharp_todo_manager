@@ -109,5 +109,10 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
 
             return newUser;
         }
+
+        public async Task<IUserModel> GetAsync(Guid uid)
+        {
+            return await _userRepository.GetAsync(uid);
+        }
     }
 }

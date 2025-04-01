@@ -31,21 +31,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return await Query(userOptions).ToListAsync<IUserModel>();
         }
 
-        //todo: organizar por regions
-        private string ConvertPassword(string password)
-        {
-            if (password.StartsWith("##no|compute##"))
-            {
-                return password.Replace("##no|compute##", "");
-            }
-
-            return BCrypt.Net.BCrypt.HashPassword(password, 10);
-        }
-
         public async Task<IUserModel> GetAsync(Guid uid)
         {
-            //validar uuid
-
             return await Context.Users.FirstOrDefaultAsync(x => x.Uid == uid);
         }
         private IQueryable<UserModel> Query(UserOptions options)

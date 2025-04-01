@@ -1,4 +1,5 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
+﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
+using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
@@ -18,19 +19,17 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private readonly ITaskRepository TaskRepository;
-        private readonly ICategoryRepository CategoryRepository;
-        private readonly IUserRepository _userRepository;
-        private readonly IJwtService _jwtService;
         private readonly IOpenAIService _openAIService;
+        private readonly ITaskService _taskService;
+        private readonly ICategoryService _categoryService;
+        private readonly IUserService _userRepository;
 
-        public TaskController(ITaskRepository taskRepository, ICategoryRepository categoryRepository, IUserRepository userRepository, IJwtService jwtService, IOpenAIService openAIService)
+        public TaskController(IOpenAIService openAIService, ITaskService taskService, ICategoryService categoryService, IUserService userRepository)
         {
-            TaskRepository = taskRepository;
-            CategoryRepository = categoryRepository;
-            _userRepository = userRepository;
-            _jwtService = jwtService;
             _openAIService = openAIService;
+            _taskService = taskService;
+            _categoryService = categoryService;
+            _userRepository = userRepository;
         }
 
         [HttpGet("uid/{taskUid}")]
@@ -43,12 +42,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 return Unauthorized();
             }
 
-            var options = new TaskOptions()
-            {
-                FilterUsers = new List<Guid> { jwtModel.Uid }
-            };
-
-            var task = await TaskRepository.GetAsync(taskUid, options);
+            var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
 
             var response = await WrapperOutTask.From(task).ConfigureAwait(false);
@@ -62,13 +56,12 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            //filter only open
             var options = new TaskOptions()
             {
-                FilterUsers = new List<Guid> { jwtModel.Uid }
+                FilterUsers = new List<Guid> { jwtModel.Uid },
             };
 
-            var tasks = await TaskRepository.GetAllAsync(options);
+            var tasks = await _taskService.GetAllAsync(options);
             if (tasks == null)
             {
                 return NotFound();
@@ -85,30 +78,20 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var wrapperModel = await wrapperInTask.Result();
+            var taskModel = await wrapperInTask.Result();
+            if (taskModel == null) return BadRequest();
 
-            var category = await CreateCategoryIfNotExist(wrapperInTask);
+            var inCategory = await _categoryService.CreateCategoryIfNotExistAsync(taskModel?.Category?.Name);
 
-            IUserModel user = await _userRepository.GetAsync(jwtModel.Uid);
+            IUserModel inUser = await _userRepository.GetAsync(jwtModel.Uid);
 
-            var task = await TaskRepository.CreatAsync(wrapperModel, user, category);
+            //todo:implement
+            var task = await _taskService.CreatAsync(taskModel, inUser, inCategory);
 
             var response = await WrapperOutTask.From(task).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
 
-        private async Task<ICategoryModel> CreateCategoryIfNotExist(WrapperInTask<TaskModel> wrapperInTask)
-        {
-            if (string.IsNullOrEmpty(wrapperInTask.CategoryName)) return null;
-
-            var category = await CategoryRepository.GetAsync(wrapperInTask.CategoryName);
-            if (category == null)
-            {
-                return await CategoryRepository.CreateAsync(wrapperInTask.CategoryName);
-            }
-
-            return category;
-        }
 
         [HttpPut("uid/{taskUid}/update")]
         [Authorize]
@@ -117,46 +100,48 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
+            var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
 
+            //todo:Atualmente você serializa o wrapper inteiro:
             var json = JsonSerializer.Serialize(wrapperInTask);
 
-            var result = await TaskRepository.UpdateAsync(json, task).ConfigureAwait(false);
+            //todo: implement
+            var result = await _taskService.UpdateAsync(json, task).ConfigureAwait(false);
             if (result == null) return UnprocessableEntity();
 
             var response = await WrapperOutTask.From(result).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
 
-        [HttpPost("uid/{taskUid}/completed")]
+        [HttpPost("uid/{taskUid}/complete")]
         [Authorize]
         public async Task<ActionResult> CompleteTask(Guid taskUid)
         {
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
+            var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
 
-            var result = await TaskRepository.TaskCompletedAsync(task);
+            var result = await _taskService.TaskCompletedAsync(task);
             if (result == null) return UnprocessableEntity();
 
             var response = await WrapperOutTask.From(result).ConfigureAwait(false);
             return new OkObjectResult(response);
         }
 
-        [HttpDelete("uid/{taskUid}/delete")]
+        [HttpDelete("uid/{taskUid}")]
         [Authorize]
         public async Task<ActionResult> DeleteTask(Guid taskUid)
         {
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await TaskRepository.GetAsync(taskUid, new TaskOptions { FilterUids = new List<Guid> { jwtModel.Uid } });
+            var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
 
-            var result = await TaskRepository.DeleteAsync(task);
+            var result = await _taskService.DeleteAsync(task);
             if (result == false) return UnprocessableEntity();
 
             return Ok();

@@ -22,12 +22,14 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         private readonly IJwtService _jwtService;
         private readonly IAuthManager _authManager;
         private readonly IUserService _userService;
+        private readonly IUserClaimsMapper _userClaimsMapper;
 
-        public AuthController(IJwtService jwtService, ILogger<AuthController> logger, IAuthManager authManager, IUserService userService)
+        public AuthController(IJwtService jwtService, ILogger<AuthController> logger, IAuthManager authManager, IUserService userService, IUserClaimsMapper userClaimsMapper)
         {
             _jwtService = jwtService;
             _authManager = authManager;
             _userService = userService;
+            _userClaimsMapper = userClaimsMapper;
         }
 
         [HttpGet("signin-google")]
@@ -39,37 +41,10 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         [HttpGet("google-response")]
         public async Task<IActionResult> GoogleResponse()
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded)
-            {
-                return BadRequest("Falha ao autenticar com Google.");
-            }
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!result.Succeeded) return BadRequest("Falha ao autenticar com GitHub.");
 
-            var userClaims = ExtractUserClaims(authenticateResult.Principal);
-            if (string.IsNullOrEmpty(userClaims.Email))
-            {
-                return BadRequest("Email não encontrado.");
-            }
-
-            var options = UserOptions.Create()
-                .WithLogins(new List<string> { userClaims.Email })
-                .Build();
-
-            var existingUser = await _userService.GetAllAsync(options);
-            if (existingUser != null && existingUser.Any())
-            {
-                return await GenerateTokenResponse(existingUser.FirstOrDefault() as UserModel).ConfigureAwait(false);
-            }
-
-            var userModel = await _userService.CreateUserModelFromClains(userClaims);
-            var createdUser = await _userService.CreateAsync(userModel);
-
-            if (createdUser != null)
-            {
-                return await GenerateTokenResponse(createdUser).ConfigureAwait(false);
-            }
-
-            return Unauthorized();
+            return await HandleExternalLoginAsync(result.Principal);
         }
 
         [HttpGet("signin-github")]
@@ -81,41 +56,14 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         [HttpGet("github-response")]
         public async Task<IActionResult> GitHubResponse()
         {
-            var authenticateResult = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            if (!authenticateResult.Succeeded)
-            {
-                return this.BadRequest("Falha ao autenticar com Google.");
-            }
+            var result = await HttpContext.AuthenticateAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            if (!result.Succeeded) return BadRequest("Falha ao autenticar com GitHub.");
 
-            var userClaims = ExtractUserClaims(authenticateResult.Principal);
-            if (string.IsNullOrEmpty(userClaims.Email))
-            {
-                return BadRequest("Email não encontrado.");
-            }
-
-            var options = UserOptions.Create()
-                .WithLogins(new List<string> { userClaims.Email })
-                .Build();
-
-            var existingUser = await _userService.GetAllAsync(options);
-            if (existingUser != null && existingUser.Any())
-            {
-                return await GenerateTokenResponse(existingUser.FirstOrDefault() as UserModel).ConfigureAwait(false);
-            }
-
-            var userModel = await _userService.CreateUserModelFromClains(userClaims);
-            var createdUser = await _userService.CreateAsync(userModel);
-
-            if (createdUser != null)
-            {
-                return await GenerateTokenResponse(createdUser).ConfigureAwait(false);
-            }
-
-            return Unauthorized();
+            return await HandleExternalLoginAsync(result.Principal);
         }
 
         [HttpPost]
-        public async Task<ActionResult<WrapperOutJwtResult>> SigninDefault([FromBody] WrapperInLogin wrapperInLogin)
+        public async Task<ActionResult<WrapperOutJwtResult>> SignInWithCredentials([FromBody] WrapperInLogin wrapperInLogin)
         {
             if (string.IsNullOrEmpty(wrapperInLogin.Login) || string.IsNullOrEmpty(wrapperInLogin.Password)) return new BadRequestObjectResult(new WrapperOutError("Dados inválidos."));
 
@@ -136,44 +84,24 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             return new OkObjectResult(response);
         }
 
-        private UserClaimsModel ExtractUserClaims(ClaimsPrincipal principal)
+        private async Task<IActionResult> HandleExternalLoginAsync(ClaimsPrincipal principal)
         {
-            var identity = principal?.Identities?.FirstOrDefault();
-            if (identity == null)
-                return null;
+            var userClaims = _userClaimsMapper.MapFromClaimsPrincipal(principal);
+            if (string.IsNullOrEmpty(userClaims.Email))
+                return BadRequest("Email não encontrado.");
 
-            string firstName = identity.FindFirst(ClaimTypes.GivenName)?.Value;
-            string lastName = identity.FindFirst(ClaimTypes.Surname)?.Value;
-            string fullName = identity.FindFirst(ClaimTypes.Name)?.Value;
+            var options = UserOptions.Create().WithLogins(new List<string> { userClaims.Email }).Build();
+            var existingUser = await _userService.GetAllAsync(options);
 
-            if (string.IsNullOrEmpty(firstName) && string.IsNullOrEmpty(lastName))
-            {
+            if (existingUser?.Any() == true)
+                return await GenerateTokenResponse(existingUser.FirstOrDefault());
 
-                if (!string.IsNullOrEmpty(fullName))
-                {
-                    var nameParts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            var userModel = await _userService.CreateUserModelFromClains(userClaims);
+            var createdUser = await _userService.CreateAsync(userModel);
 
-                    if (nameParts.Length > 1)
-                    {
-                        firstName = nameParts[0];
-                        lastName = nameParts[^1];
-                    }
-                    else
-                    {
-                        firstName = fullName;
-                        lastName = "N/A";
-                    }
-                }
-            }
-
-            return new UserClaimsModel
-            {
-                Email = identity.FindFirst(ClaimTypes.Email)?.Value,
-                FirstName = firstName,
-                LastName = lastName,
-                PrivateId = identity.FindFirst(ClaimTypes.NameIdentifier)?.Value,
-                Name = fullName
-            };
+            return createdUser != null
+                ? await GenerateTokenResponse(createdUser)
+                : Unauthorized();
         }
     }
 }

@@ -3,6 +3,7 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence;
 using Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories;
 using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
+using Api.GRRInnovations.TodoManager.Infrastructure.Security;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Microsoft.EntityFrameworkCore;
@@ -18,7 +19,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<ITaskRepository, TaskRepository>();
             services.AddScoped<IUserRepository, UserRepository>();
-            
+            services.AddScoped<IUserClaimsMapper, UserClaimsMapper>();
+
             AddDbContext(services, configuration);
 
             //todo:migrate for dependency injection infra

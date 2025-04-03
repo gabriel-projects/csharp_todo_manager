@@ -4,13 +4,11 @@ using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
-using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -85,7 +83,6 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             IUserModel inUser = await _userRepository.GetAsync(jwtModel.Uid);
 
-            //todo:implement
             var task = await _taskService.CreatAsync(taskModel, inUser, inCategory);
 
             var response = await WrapperOutTask.From(task).ConfigureAwait(false);
@@ -103,10 +100,6 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
 
-            //todo:Atualmente você serializa o wrapper inteiro:
-            var json = JsonSerializer.Serialize(wrapperInTask);
-
-            //todo: implement
             var result = await _taskService.UpdateAsync(json, task).ConfigureAwait(false);
             if (result == null) return UnprocessableEntity();
 

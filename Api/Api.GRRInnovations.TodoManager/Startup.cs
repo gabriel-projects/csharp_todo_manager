@@ -2,13 +2,10 @@
 using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 using Api.GRRInnovations.TodoManager.Application;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Domain.Extensions;
 using Api.GRRInnovations.TodoManager.Infrastructure;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
-using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Api.GRRInnovations.TodoManager.Security;
 using Asp.Versioning;
@@ -19,8 +16,6 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Api.GRRInnovations.TodoManager

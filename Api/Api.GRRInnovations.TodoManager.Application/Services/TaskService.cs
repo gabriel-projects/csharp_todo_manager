@@ -17,14 +17,16 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
 
         public Task<ITaskModel> CreatAsync(TaskModel taskModel, IUserModel inUser, ICategoryModel inCategory)
         {
-            //Todo: Implement
-            throw new NotImplementedException();
+            if (taskModel == null || inUser == null) return null;
+
+            return _taskRepository.CreatAsync(taskModel, inUser, inCategory);
         }
 
         public Task<ITaskModel> UpdateAsync(string json, ITaskModel task)
         {
-            //Todo: Implement
-            throw new NotImplementedException();
+            if (task is not TaskModel taskModel || string.IsNullOrEmpty(json)) return null;
+
+            return _taskRepository.UpdateAsync(json, taskModel);
         }
 
         public Task<bool> DeleteAsync(ITaskModel task)

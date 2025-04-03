@@ -1,6 +1,5 @@
 ﻿using System.Security.Claims;
 using Api.GRRInnovations.TodoManager.Application.Interfaces;
-using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.ValueObjects;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;

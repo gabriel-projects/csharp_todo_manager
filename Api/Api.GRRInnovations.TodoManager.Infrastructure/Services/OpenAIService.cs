@@ -1,10 +1,10 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
-using Api.GRRInnovations.TodoManager.Domain.Enuns;
+﻿using Api.GRRInnovations.TodoManager.Domain.ContractResolver;
+using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Enuns;
 using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
+using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Microsoft.Extensions.Configuration;
-using System.Net.Http;
-using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
 
@@ -13,17 +13,14 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
     public class OpenAIService : IOpenAIService
     {
         private readonly HttpClient _httpClient;
-        private readonly string _apiKey;
-        private const string OpenAiUrl = "https://api.openai.com/v1/chat/completions";
 
         public OpenAIService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
         {
             _httpClient = httpClientFactory.CreateClient("OpenAI");
         }
 
-        public async Task<string?> InterpretTaskAsync(string message, IUserModel user)
+        public async Task<ITaskModel?> InterpretTaskAsync(string message, IUserModel user)
         {
-            //todo: rewrite in us
             var requestBody = new
             {
                 model = "gpt-4o-mini",
@@ -68,23 +65,34 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
             try
             {
                 var openAIModel = JsonSerializer.Deserialize<OpenAIResponse>(responseString);
-
-                //todo: adjust json
-                var taskData = JsonSerializer.Deserialize<TaskModel>(openAIModel.Choices.FirstOrDefault().Message.Content, new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
-
-                if (taskData != null)
+                if (openAIModel == null || openAIModel.Choices == null || !openAIModel.Choices.Any())
                 {
-                    //taskData.UserUid = Guid.Parse(userUid);
-                    taskData.Status = EStatusTask.Pending;
+                    return null;
                 }
 
-                //todo: adjust return
-                return null;
+                var messageResponse = openAIModel.Choices.FirstOrDefault().Message.Content;
+
+                var wrapperTask = DefaultDataResolver.Deserialize<WrapperOutTask>(message);
+                var taskModel = await wrapperTask.Result();
+
+                if (taskModel != null)
+                {
+                    taskModel.User = user;
+                    taskModel.Status = EStatusTask.Pending;
+                }
+
+                //todo: save task sql
+                
             }
-            catch (JsonException)
+            catch (JsonException ex)
             {
-                return null;
+                Console.WriteLine($"Error deserializing JSON: {ex.Message}");
             }
+            catch(Exception ex)
+            {
+                Console.WriteLine($"Error: {ex.Message}");
+            }
+            return null;
         }
     }
 }

@@ -9,6 +9,7 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -20,14 +21,14 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         private readonly IOpenAIService _openAIService;
         private readonly ITaskService _taskService;
         private readonly ICategoryService _categoryService;
-        private readonly IUserService _userRepository;
+        private readonly IUserService _userService;
 
-        public TaskController(IOpenAIService openAIService, ITaskService taskService, ICategoryService categoryService, IUserService userRepository)
+        public TaskController(IOpenAIService openAIService, ITaskService taskService, ICategoryService categoryService, IUserService userRepositry)
         {
             _openAIService = openAIService;
             _taskService = taskService;
             _categoryService = categoryService;
-            _userRepository = userRepository;
+            _userService = userRepositry;
         }
 
         [HttpGet("uid/{taskUid}")]
@@ -81,7 +82,8 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var inCategory = await _categoryService.CreateCategoryIfNotExistAsync(taskModel?.Category?.Name);
 
-            IUserModel inUser = await _userRepository.GetAsync(jwtModel.Uid);
+            IUserModel inUser = await _userService.GetAsync(jwtModel.Uid);
+            if (inUser == null) return NotFound("Usuário não encontrado.");
 
             var task = await _taskService.CreatAsync(taskModel, inUser, inCategory);
 
@@ -99,6 +101,8 @@ namespace Api.GRRInnovations.TodoManager.Controllers
 
             var task = await _taskService.GetAsync(taskUid);
             if (task == null) return NotFound();
+
+            var json = JsonSerializer.Serialize(wrapperInTask);
 
             var result = await _taskService.UpdateAsync(json, task).ConfigureAwait(false);
             if (result == null) return UnprocessableEntity();
@@ -135,7 +139,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             if (task == null) return NotFound();
 
             var result = await _taskService.DeleteAsync(task);
-            if (result == false) return UnprocessableEntity();
+            if (result == false) return UnprocessableEntity("Erro ao deletar a tarefa.");
 
             return Ok();
         }

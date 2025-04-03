@@ -41,6 +41,23 @@ namespace Api.GRRInnovations.TodoManager
             ConfigureApiVersioning(services);
             ConfigureHttpClients(services);
 
+            services.AddAuthorization();
+
+            services.AddLogging(logging =>
+            {
+                logging.AddConsole();
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll", policy =>
+                {
+                    policy.AllowAnyOrigin()
+                          .AllowAnyMethod()
+                          .AllowAnyHeader();
+                });
+            });
+
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
@@ -219,17 +236,18 @@ namespace Api.GRRInnovations.TodoManager
                 app.UseSwaggerUI();
             }
 
-            //todo: mover para metodo async
-            //cron
+            //todo: criar teste unit para verificar se o banco de dados foi criado e se aplicaou a migração
             var scope = app.ApplicationServices.CreateScope();
             _ = MigrationHelper.ManageDataAsync(scope.ServiceProvider);
 
-            //app.UseHttpsRedirection();
+            app.UseHttpsRedirection();
 
             app.UseRouting();
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
             {

@@ -1,6 +1,7 @@
 ﻿using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Enuns;
 using Api.GRRInnovations.TodoManager.Domain.Enuns;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http;
 using System.Net.Http.Headers;
@@ -20,7 +21,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
             _httpClient = httpClientFactory.CreateClient("OpenAI");
         }
 
-        public async Task<string?> InterpretTaskAsync(string message, string user)
+        public async Task<string?> InterpretTaskAsync(string message, IUserModel user)
         {
             //todo: rewrite in us
             var requestBody = new

@@ -4,6 +4,8 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
@@ -13,33 +15,33 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
         public const string AuthorizationKey = "Authorization";
         public const string AuthorizationQueryKey = "access_token";
 
-        public static Task<IUserModel> JwtInfo(this HttpContext context)
+        public static Task<IUserModel?> JwtInfo(this HttpContext context)
         {
             var user = context.User;
-            if (user == null) return null;
+            if (user == null) return Task.FromResult<IUserModel?>(null);
 
             var claimIdentifier = user.Claims.FirstOrDefault(c => c.Type == JwtClaimHelper.ClaimUserUid)?.Value;
-            if (string.IsNullOrEmpty(claimIdentifier)) return null;
+            if (string.IsNullOrEmpty(claimIdentifier)) return Task.FromResult<IUserModel?>(null);
 
             var userUid = Guid.Parse(claimIdentifier);
-            if (userUid == Guid.Empty) return null;
+            if (userUid == Guid.Empty) return Task.FromResult<IUserModel?>(null);
 
             try
             {
                 var token = context.Request.Jwt();
 
                 var jwtService = context.RequestServices.GetService<IJwtService>();
-                if (jwtService == null) return null;
+                if (jwtService == null) return Task.FromResult<IUserModel?>(null);
 
                 IUserModel? response = jwtService.FromJwt(token);
-                if (response == null) return null;
+                if (response == null) return Task.FromResult<IUserModel?>(null);
 
                 return Task.FromResult(response);
 
             }
             catch (Exception ex)
             {
-                return null;
+                return Task.FromResult<IUserModel?>(null);
             }
         }
 

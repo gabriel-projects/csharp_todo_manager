@@ -1,21 +1,13 @@
 ﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Extensions;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.Extensions.Logging;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Api.GRRInnovations.TodoManager.Application.Services
 {
     public class AuthService : IAuthService
     {
-        private const string ROUTE_DATA_CONTROLLER_KEY = "controller";
         private readonly IUrlHelperFactory _urlHelperFactory;
         private readonly IHttpContextAccessor _httpContextAccessor;
         private readonly IActionContextAccessor _actionAccessor;

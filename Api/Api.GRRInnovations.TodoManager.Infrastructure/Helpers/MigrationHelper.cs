@@ -8,7 +8,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Helpers
     {
         public static async Task ManageDataAsync(IServiceProvider svcProvider)
         {
-            Console.WriteLine("Aplicando migração CW");
+            Console.WriteLine("Aplicando migração");
 
             var dbContextSvc = svcProvider.GetRequiredService<ApplicationDbContext>();
 

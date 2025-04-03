@@ -1,15 +1,14 @@
-﻿using Api.GRRInnovations.TodoManager.Application.Interfaces;
+﻿using System.Text.Json;
+using Api.GRRInnovations.TodoManager.Application.Interfaces;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
 using Api.GRRInnovations.TodoManager.Infrastructure.Extensions;
 using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
-using Api.GRRInnovations.TodoManager.Infrastructure.Services;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Text.Json;
 
 namespace Api.GRRInnovations.TodoManager.Controllers
 {
@@ -18,14 +17,12 @@ namespace Api.GRRInnovations.TodoManager.Controllers
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private readonly IOpenAIService _openAIService;
         private readonly ITaskService _taskService;
         private readonly ICategoryService _categoryService;
         private readonly IUserService _userService;
 
-        public TaskController(IOpenAIService openAIService, ITaskService taskService, ICategoryService categoryService, IUserService userRepositry)
+        public TaskController(ITaskService taskService, ICategoryService categoryService, IUserService userRepositry)
         {
-            _openAIService = openAIService;
             _taskService = taskService;
             _categoryService = categoryService;
             _userService = userRepositry;
@@ -142,22 +139,6 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             if (result == false) return UnprocessableEntity("Erro ao deletar a tarefa.");
 
             return Ok();
-        }
-
-        [HttpPost("interpret")]
-        public async Task<IActionResult> InterpretTask([FromBody] WrapperInInterpretTask wrapperInInterpretTask)
-        {
-            var (isValid, errorMessage) = wrapperInInterpretTask.Validate();
-            if (!isValid)
-            {
-                return BadRequest(new WrapperOutError(errorMessage));
-            }
-
-            var task = await _openAIService.InterpretTaskAsync(wrapperInInterpretTask.Message, "");
-            if (task == null)
-                return BadRequest("Não foi possível interpretar a mensagem.");
-
-            return Ok(task);
         }
     }
 }

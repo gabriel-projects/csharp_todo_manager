@@ -4,17 +4,8 @@ using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net.Http;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
 {
     public static class HttpRequestExtension
@@ -48,7 +39,6 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Extensions
             }
             catch (Exception ex)
             {
-                //to do: tratar
                 return null;
             }
         }

@@ -48,16 +48,6 @@ namespace Api.GRRInnovations.TodoManager
                 logging.AddConsole();
             });
 
-            services.AddCors(options =>
-            {
-                options.AddPolicy("AllowAll", policy =>
-                {
-                    policy.AllowAnyOrigin()
-                          .AllowAnyMethod()
-                          .AllowAnyHeader();
-                });
-            });
-
             services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
             services.AddSingleton<IUrlHelperFactory, UrlHelperFactory>();
@@ -238,7 +228,6 @@ namespace Api.GRRInnovations.TodoManager
                 app.UseSwaggerUI();
             }
 
-            //todo: criar teste unit para verificar se o banco de dados foi criado e se aplicaou a migração
             var scope = app.ApplicationServices.CreateScope();
             _ = MigrationHelper.ManageDataAsync(scope.ServiceProvider);
 
@@ -248,8 +237,6 @@ namespace Api.GRRInnovations.TodoManager
 
             app.UseAuthentication();
             app.UseAuthorization();
-
-            app.UseCors("AllowAll");
 
             app.UseEndpoints(endpoints =>
             {

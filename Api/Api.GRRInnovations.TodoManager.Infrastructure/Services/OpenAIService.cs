@@ -4,6 +4,7 @@ using Api.GRRInnovations.TodoManager.Domain.Enuns;
 using Api.GRRInnovations.TodoManager.Domain.Models;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.In;
 using Api.GRRInnovations.TodoManager.Domain.Wrappers.Out;
+using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using System.Text;
 using System.Text.Json;
@@ -13,10 +14,14 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
     public class OpenAIService : IOpenAIService
     {
         private readonly HttpClient _httpClient;
+        private readonly IUserRepository _userRepository;
+        private readonly ITaskRepository _taskRepository;
 
-        public OpenAIService(IHttpClientFactory httpClientFactory, IConfiguration configuration)
+        public OpenAIService(IHttpClientFactory httpClientFactory, IConfiguration configuration, IUserRepository userRepository, ITaskRepository taskRepository)
         {
             _httpClient = httpClientFactory.CreateClient("OpenAI");
+            _userRepository = userRepository;
+            _taskRepository = taskRepository;
         }
 
         public async Task<ITaskModel?> InterpretTaskAsync(string message, IUserModel user)
@@ -81,8 +86,10 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Services
                     taskModel.Status = EStatusTask.Pending;
                 }
 
-                //todo: save task sql
-                
+                var userModel = await _userRepository.GetAsync(user.Uid);
+
+                taskModel = await _taskRepository.CreatAsync(taskModel, userModel, null);
+                return taskModel;
             }
             catch (JsonException ex)
             {

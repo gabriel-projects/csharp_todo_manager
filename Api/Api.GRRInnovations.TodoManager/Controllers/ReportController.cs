@@ -13,6 +13,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
         public IActionResult GetReport(Guid userId)
         {
             //todo: gerar um pdf ou um excel com os dados do usuário
+            //todo: ter uma tabela de contabilização de tarefas por usuario
             var report = new
             {
                 UserId = userId,

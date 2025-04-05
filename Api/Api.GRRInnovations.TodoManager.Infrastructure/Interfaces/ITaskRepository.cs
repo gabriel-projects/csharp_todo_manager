@@ -1,4 +1,5 @@
-﻿using Api.GRRInnovations.TodoManager.Domain.Models;
+﻿using Api.GRRInnovations.TodoManager.Domain.Enuns;
+using Api.GRRInnovations.TodoManager.Domain.Models;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Repositories
 {
@@ -22,5 +23,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Repositories
         public List<Guid> FilterUsers { get; set; }
 
         public List<Guid> FilterUids { get; set; }
+
+        public EStatusTask FilterStatus { get; set; }
+
+        public bool Recurrent { get; set; }
+
+        public DateTime? CreatedAtLessThanDays { get; set; }
+
+        public bool DueWithinOneHour { get; set; }
     }
 }

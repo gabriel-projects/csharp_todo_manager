@@ -10,6 +10,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Api.GRRInnovations.TodoManager.Infrastructure.Repositories;
 using Api.GRRInnovations.TodoManager.Domain.Enuns;
+using Hangfire;
+using Api.GRRInnovations.TodoManager.Infrastructure.Hangfire.Jobs;
+using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
 
 namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 {
@@ -36,6 +39,17 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
 
             await Context.Tasks.AddAsync(taskM).ConfigureAwait(false);
             await Context.SaveChangesAsync().ConfigureAwait(false);
+
+            var horaLembrete = taskM.End.AddHours(-1);
+            var delay = horaLembrete - DateTime.UtcNow;
+
+            if (delay > TimeSpan.Zero)
+            {
+                BackgroundJob.Schedule<ITaskReminderService>(
+                    service => service.SendReminderEmail(taskM),
+                    delay
+                );
+            }
 
             return taskM;
         }
@@ -95,6 +109,13 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             var query = Context.Tasks.AsQueryable();
 
             if (options.FilterUsers != null) query = query.Where(p => options.FilterUsers.Contains(p.UserUid));
+            if (options.FilterStatus != EStatusTask.None) query = query.Where(p => p.Status == options.FilterStatus);
+            if (options.Recurrent) query = query.Where(x => x.Recurrent == options.Recurrent && x.DbTaskRecurrence != null && x.DbTaskRecurrence.End != DateTime.MinValue);
+            if (options.CreatedAtLessThanDays != null) query = query.Where(x => x.CreatedAt <= options.CreatedAtLessThanDays.Value);
+            if (options.DueWithinOneHour)
+            {
+                query = query.Where(x => x.End >= DateTime.Now && x.End <= DateTime.Now.AddHours(1));
+            }
 
             return query;
         }

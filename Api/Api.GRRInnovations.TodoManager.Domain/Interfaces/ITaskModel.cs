@@ -10,6 +10,10 @@ namespace Api.GRRInnovations.TodoManager.Domain.Models
 
         public bool Recurrent { get; set; }
 
+        public DateTime Start { get; set; }
+
+        public DateTime End { get; set; }
+
         public EStatusTask Status { get; set; }
 
         public EPriorityTask Priority { get; set; }

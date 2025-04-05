@@ -5,10 +5,13 @@ using System.Text.Json;
 using Api.GRRInnovations.TodoManager.Application;
 using Api.GRRInnovations.TodoManager.Domain.Entities;
 using Api.GRRInnovations.TodoManager.Infrastructure;
+using Api.GRRInnovations.TodoManager.Infrastructure.Hangfire;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Security.Authentication;
 using Api.GRRInnovations.TodoManager.Security;
 using Asp.Versioning;
+using Hangfire;
+using Hangfire.PostgreSql;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
@@ -42,6 +45,8 @@ namespace Api.GRRInnovations.TodoManager
             ConfigureHttpClients(services);
 
             services.AddAuthorization();
+
+            services.AddHangfireServer();
 
             services.AddLogging(logging =>
             {
@@ -238,10 +243,17 @@ namespace Api.GRRInnovations.TodoManager
             app.UseAuthentication();
             app.UseAuthorization();
 
+            // to acess dashboard shoud be /hangfire
+            app.UseHangfireDashboard();
+
+            HangfireJobsInitializer.ConfigureRecurringJobs();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
             });
+
+            RecurringJob.AddOrUpdate("job-teste", () => Console.WriteLine("Executando job no PostgreSQL..."), Cron.Minutely);
         }
     }
 }

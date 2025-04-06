@@ -5,7 +5,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Repositories
 {
     public interface ITaskRepository
     {
-        Task<ITaskModel> GetAsync(Guid id);
+        Task<ITaskModel> GetAsync(Guid id, TaskOptions options);
 
         Task<List<ITaskModel>> GetAllAsync(TaskOptions options);
 
@@ -31,5 +31,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Repositories
         public DateTime? CreatedAtLessThanDays { get; set; }
 
         public bool DueWithinOneHour { get; set; }
+
+        public bool IncluseUser { get; set; }
     }
 }

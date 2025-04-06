@@ -4,6 +4,6 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Interfaces
 {
     public interface ITaskReminderService
     {
-        Task SendReminderEmail(ITaskModel taskModel);
+        Task SendReminderEmail(Guid taskUid);
     }
 }

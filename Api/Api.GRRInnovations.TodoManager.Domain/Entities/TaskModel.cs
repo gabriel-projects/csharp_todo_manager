@@ -10,12 +10,7 @@ namespace Api.GRRInnovations.TodoManager.Domain.Entities
         public bool Recurrent { get; set; }
         public DateTime Start { get; set; }
 
-        private DateTime _end;
-        public DateTime End
-        {
-            get => _end;
-            set => _end = value == default ? DateTime.Today.AddHours(23).AddMinutes(59) : value;
-        }
+        public DateTime End { get; set; } = DateTime.Today.AddHours(23).AddMinutes(59).ToUniversalTime();
 
         public EStatusTask Status { get; set; } = EStatusTask.Pending;
         public EPriorityTask Priority { get; set; } = EPriorityTask.None;

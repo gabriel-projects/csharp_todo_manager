@@ -39,9 +39,9 @@ namespace Api.GRRInnovations.TodoManager.Application.Services
             return await _taskRepository.GetAllAsync(options);
         }
 
-        public async Task<ITaskModel> GetAsync(Guid uid)
+        public async Task<ITaskModel> GetAsync(Guid uid, TaskOptions options)
         {
-            return await _taskRepository.GetAsync(uid);
+            return await _taskRepository.GetAsync(uid, options);
         }
 
         public async Task<ITaskModel> TaskCompletedAsync(ITaskModel model)

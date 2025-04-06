@@ -253,7 +253,7 @@ namespace Api.GRRInnovations.TodoManager
                 endpoints.MapControllers();
             });
 
-            RecurringJob.AddOrUpdate("job-teste", () => Console.WriteLine("Executando job no PostgreSQL..."), Cron.Minutely);
+            //RecurringJob.AddOrUpdate("job-teste", () => Console.WriteLine("Executando job no PostgreSQL..."), Cron.Minutely);
         }
     }
 }

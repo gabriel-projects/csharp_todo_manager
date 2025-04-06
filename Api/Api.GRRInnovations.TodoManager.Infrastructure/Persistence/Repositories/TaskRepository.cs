@@ -46,7 +46,7 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             if (delay > TimeSpan.Zero)
             {
                 BackgroundJob.Schedule<ITaskReminderService>(
-                    service => service.SendReminderEmail(taskM),
+                    service => service.SendReminderEmail(taskM.Uid),
                     delay
                 );
             }
@@ -70,9 +70,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             return await Query(options).ToListAsync<ITaskModel>();
         }
 
-        public async Task<ITaskModel> GetAsync(Guid id)
+        public async Task<ITaskModel> GetAsync(Guid id, TaskOptions taskOptions)
         {
-            return await Context.Tasks.FirstOrDefaultAsync(x => x.Uid == id);
+            return await Query(taskOptions).FirstOrDefaultAsync();
         }
 
         public async Task<ITaskModel> UpdateAsync(string json, ITaskModel model)
@@ -115,6 +115,11 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure.Persistence.Repositories
             if (options.DueWithinOneHour)
             {
                 query = query.Where(x => x.End >= DateTime.Now && x.End <= DateTime.Now.AddHours(1));
+            }
+
+            if (options.IncluseUser)
+            {
+                query = query.Include(x => x.DbUser).ThenInclude(x => x.DbUserDetail);
             }
 
             return query;

@@ -38,7 +38,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
                 return Unauthorized();
             }
 
-            var task = await _taskService.GetAsync(taskUid);
+            var task = await _taskService.GetAsync(taskUid, new TaskOptions());
             if (task == null) return NotFound();
 
             var response = await WrapperOutTask.From(task).ConfigureAwait(false);
@@ -96,7 +96,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await _taskService.GetAsync(taskUid);
+            var task = await _taskService.GetAsync(taskUid, new TaskOptions());
             if (task == null) return NotFound();
 
             var json = JsonSerializer.Serialize(wrapperInTask);
@@ -115,7 +115,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await _taskService.GetAsync(taskUid);
+            var task = await _taskService.GetAsync(taskUid, new TaskOptions());
             if (task == null) return NotFound();
 
             var result = await _taskService.TaskCompletedAsync(task);
@@ -132,7 +132,7 @@ namespace Api.GRRInnovations.TodoManager.Controllers
             var jwtModel = await HttpContext.JwtInfo();
             if (jwtModel == null) return Unauthorized();
 
-            var task = await _taskService.GetAsync(taskUid);
+            var task = await _taskService.GetAsync(taskUid, new TaskOptions());
             if (task == null) return NotFound();
 
             var result = await _taskService.DeleteAsync(task);

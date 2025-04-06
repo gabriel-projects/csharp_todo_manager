@@ -11,6 +11,8 @@ namespace Api.GRRInnovations.TodoManager.Application
             services.AddScoped<IAuthManager, AuthManager>();
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ITaskService, TaskService>();
+            services.AddScoped<ICategoryService, CategoryService>();
 
             return services;
         }

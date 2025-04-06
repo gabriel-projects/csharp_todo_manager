@@ -1,4 +1,5 @@
-﻿using Api.GRRInnovations.TodoManager.Infrastructure.Hangfire;
+﻿using Api.GRRInnovations.TodoManager.Domain.Models;
+using Api.GRRInnovations.TodoManager.Infrastructure.Hangfire;
 using Api.GRRInnovations.TodoManager.Infrastructure.Hangfire.Jobs;
 using Api.GRRInnovations.TodoManager.Infrastructure.Helpers;
 using Api.GRRInnovations.TodoManager.Infrastructure.Interfaces;
@@ -25,10 +26,14 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IUserClaimsMapper, UserClaimsMapper>();
 
+            services.AddScoped<IEmailService, SendGridEmailService>();
+
             AddDbContext(services, configuration);
             AddContextHandFire(services, configuration);
 
             services.AddSingleton<IJwtService, JwtService>();
+
+            services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
 
             return services;
         }

@@ -14,6 +14,8 @@ using Hangfire.PostgreSql;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using OfficeOpenXml;
+using QuestPDF.Infrastructure;
 namespace Api.GRRInnovations.TodoManager.Infrastructure
 {
     public static class DependencyInjection
@@ -27,6 +29,8 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             services.AddScoped<IUserClaimsMapper, UserClaimsMapper>();
 
             services.AddScoped<IEmailService, SendGridEmailService>();
+            services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
+            services.AddScoped<IExcelReportGenerator, ExcelReportGenerator>();
 
             AddDbContext(services, configuration);
             AddContextHandFire(services, configuration);
@@ -34,6 +38,9 @@ namespace Api.GRRInnovations.TodoManager.Infrastructure
             services.AddSingleton<IJwtService, JwtService>();
 
             services.Configure<SendGridSettings>(configuration.GetSection("SendGrid"));
+
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            QuestPDF.Settings.License = LicenseType.Community;
 
             return services;
         }

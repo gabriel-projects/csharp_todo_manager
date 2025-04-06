@@ -13,6 +13,8 @@ namespace Api.GRRInnovations.TodoManager.Application
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ITaskService, TaskService>();
             services.AddScoped<ICategoryService, CategoryService>();
+            services.AddScoped<IReportService, ReportService>();
+
 
             return services;
         }

@@ -12,6 +12,7 @@ A robust task management API built with .NET 6, featuring authentication, task m
 - **[Background Jobs]**: Hangfire
 - **[AI Integration]**: OpenAI API
 - **[Email Service]**: SendGrid
+- **[Reports]**: (QuestPDF, EPPlus)
 - **[Code Quality]**:
   - StyleCop for code analysis
   - SonarAnalyzer for code quality
